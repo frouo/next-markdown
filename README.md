@@ -1,10 +1,10 @@
-# next-md
+# next-markdown
 
 Made for [Nextjs](https://nextjs.org/) website.
 
 Currently live on [lembot.com](https://lembot.com).
 
-Lembot home page is 100% custom made with nextjs. **All** other pages are generated from [github.com/frouo/lembot-public-website](https://github.com/frouo/lembot-public-website) using `next-md`.
+Lembot home page is 100% custom made with nextjs. **All** other pages are generated from [github.com/frouo/lembot-public-website](https://github.com/frouo/lembot-public-website) using `next-markdown`.
 
 ## Get started
 
@@ -13,7 +13,7 @@ Create a `[...nextmd].tsx` (or `.jsx`) in the `pages/` folder.
 And paste the following lines
 
 ```nodejs
-import NextMd from "nextmd";
+import NextMd from "next-markdown";
 
 const nextmd = NextMd({
   pathToLocalRepoInDevelopmentMode: "../lembot-public-website",

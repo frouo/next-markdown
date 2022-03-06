@@ -1,5 +1,5 @@
 {
-  "name": "@frouo/next-md",
+  "name": "next-markdown",
   "version": "0.0.1",
   "description": "Static pages generated from markdown files for your Next.js website.",
   "main": "dist/index.js",
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/frouo/next-md.git"
+    "url": "git+https://github.com/frouo/next-markdown.git"
   },
   "keywords": [
     "nextjs",
@@ -34,9 +34,9 @@
   "author": "François Rouault <francois.rouault@cocoricostudio.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/frouo/next-md/issues"
+    "url": "https://github.com/frouo/next-markdown/issues"
   },
-  "homepage": "https://github.com/frouo/next-md#readme",
+  "homepage": "https://github.com/frouo/next-markdown#readme",
   "devDependencies": {
     "@types/jest": "27.4.1",
     "jest": "27.4.7",
