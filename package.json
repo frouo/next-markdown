@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "test": "jest --config jestconfig.json",
-    "build": "tsc",
+    "build": "rm -rf dist/ && tsc",
     "format": "prettier --write \"src/**/*.{js,ts}\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
