@@ -1,14 +1,16 @@
 import { exec } from 'child_process';
 import fs from 'fs';
+import matter from 'gray-matter';
 import { join } from 'path';
-import { unified } from 'unified';
+import rehypeStringify from 'rehype-stringify';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
-import rehypeStringify from 'rehype-stringify';
-import { rehypeVideos } from './rehype-videos';
-import { NextMdConfig, YAMLFrontMatter } from './types';
-import matter from 'gray-matter';
+import { unified } from 'unified';
+import { visit } from 'unist-util-visit';
 
+import { NextMdConfig, YAMLFrontMatter } from './types';
+
+import type { Root } from 'mdast';
 const NextMd = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter extends PageFrontMatter>(
   config: NextMdConfig,
 ) => {
@@ -66,8 +68,6 @@ const NextMd = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter ext
     },
   };
 };
-
-export default NextMd;
 
 // -------
 // Utils
@@ -279,3 +279,55 @@ async function markdownToHtml(markdown: string) {
 
   return String(result);
 }
+
+function rehypeVideos(): (tree: Root) => void {
+  return (tree) => {
+    visit(tree, 'element', (node: any) => {
+      if (node.tagName === 'img' && node.properties && typeof node.properties.src === 'string') {
+        const url = node.properties.src;
+
+        if (url.includes('.mov') || url.includes('mp4')) {
+          const altData = extractDataFromAlt(node.properties.alt);
+
+          node.tagName = 'video';
+          node.properties.width = '100%';
+          node.properties.controls = true;
+
+          if (typeof altData === 'string') {
+            node.properties.alt = altData;
+          } else {
+            Object.entries(altData).forEach(([key, value]) => {
+              node.properties[key] = value;
+            });
+          }
+        }
+      }
+    });
+  };
+}
+
+/**
+ * If the alt is a JSON, the JSON key/value will be transfered to `node.properties`.
+ *
+ * For example, this markdown:
+ *
+ * ```md
+ * ![{"alt":"20211029 - edit bot demo","poster":"https://frouo.com/poster.jpg"}](https://frouo.com/video.mp4)
+ * ```
+ *
+ * will generate:
+ *
+ * ```html
+ * <video src="https://frouo.com/video.mp4" alt="20211029 - edit bot demo" width="100%" controls poster="https://frouo.com/poster.jpg"></video>
+ * ```
+ */
+function extractDataFromAlt(alt: string) {
+  try {
+    return JSON.parse(alt) as { [key: string]: any };
+  } catch (error) {
+    return alt;
+  }
+}
+
+export default NextMd;
+export { rehypeVideos as rehypeVideos };
