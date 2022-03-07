@@ -1,6 +1,6 @@
 {
   "name": "next-markdown",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Static pages generated from markdown files for your Next.js website.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
