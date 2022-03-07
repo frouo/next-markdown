@@ -83,7 +83,11 @@ const getContentPath = (config: NextMdConfig) => {
   return config.contentGitRemoteUrl ? join(pathToLocalGitRepo, config.pathToContent) : config.pathToContent;
 };
 
-async function getPostsFromNextmd<T extends YAMLFrontMatter>(files: File[], localRepoPath: string, nextmd: string[]) {
+const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
+  files: File[],
+  localRepoPath: string,
+  nextmd: string[],
+) => {
   type PostFile = { file: File; date: string };
 
   const posts = files.reduce<PostFile[]>((prev, curr) => {
@@ -108,9 +112,9 @@ async function getPostsFromNextmd<T extends YAMLFrontMatter>(files: File[], loca
           };
         }),
       );
-}
+};
 
-async function treeContentRepo(pathToContent: string, config: NextMdConfig) {
+const treeContentRepo = async (pathToContent: string, config: NextMdConfig) => {
   if (!config.contentGitRemoteUrl) {
     consoleLogNextmd('creating page from', pathToContent);
     return treeSync(pathToContent);
@@ -148,10 +152,10 @@ async function treeContentRepo(pathToContent: string, config: NextMdConfig) {
   consoleLogNextmd('creating page from', config.contentGitRemoteUrl);
 
   return treeSync(pathToContent);
-}
+};
 
-function cmd(commandLine: string) {
-  return new Promise((resolve, reject) => {
+const cmd = (commandLine: string) => {
+  return new Promise<string>((resolve, reject) => {
     exec(commandLine, (error, stdout, stderr) => {
       if (error) {
         reject(error);
@@ -159,7 +163,7 @@ function cmd(commandLine: string) {
       resolve(stdout || stderr);
     });
   });
-}
+};
 
 const exclude = (object: TreeObject) => {
   if (object.type === 'file' && object.name.endsWith('.md') === false) {
@@ -183,7 +187,7 @@ const exclude = (object: TreeObject) => {
 
 const include = (object: TreeObject) => !exclude(object);
 
-function treeSync(path: string) {
+const treeSync = (path: string) => {
   const res = fs
     .readdirSync(path)
     .map((e) => ({ name: e, path: join(path, e) }))
@@ -209,7 +213,7 @@ function treeSync(path: string) {
     .filter(include);
 
   return res;
-}
+};
 
 type Dir = {
   type: 'dir';
@@ -257,7 +261,7 @@ const getSlugFromNextmd = (nextmd: string[]) => nextmd.slice(-1).pop() ?? ''; //
 
 const getParentFromNextmd = (nextmd: string[]) => '/' + nextmd.slice(0, -1).join('/'); // remove last element of array
 
-async function getPageDataFromMarkdownFileRawData<T extends YAMLFrontMatter>(rawdata: string) {
+const getPageDataFromMarkdownFileRawData = async <T extends YAMLFrontMatter>(rawdata: string) => {
   const { data, content } = matter(rawdata);
   const html = await markdownToHtml(content);
 
@@ -265,9 +269,9 @@ async function getPageDataFromMarkdownFileRawData<T extends YAMLFrontMatter>(raw
     frontMatter: data as T,
     html,
   };
-}
+};
 
-async function markdownToHtml(markdown: string) {
+const markdownToHtml = async (markdown: string) => {
   const result = await unified()
     .use(remarkParse)
     .use(remarkRehype)
@@ -276,9 +280,9 @@ async function markdownToHtml(markdown: string) {
     .process(markdown);
 
   return String(result);
-}
+};
 
-function rehypeVideos(): (tree: Root) => void {
+const rehypeVideos = (): ((tree: Root) => void) => {
   return (tree) => {
     visit(tree, 'element', (node: any) => {
       if (node.tagName === 'img' && node.properties && typeof node.properties.src === 'string') {
@@ -302,7 +306,7 @@ function rehypeVideos(): (tree: Root) => void {
       }
     });
   };
-}
+};
 
 /**
  * If the alt is a JSON, the JSON key/value will be transfered to `node.properties`.
@@ -319,13 +323,13 @@ function rehypeVideos(): (tree: Root) => void {
  * <video src="https://frouo.com/video.mp4" alt="20211029 - edit bot demo" width="100%" controls poster="https://frouo.com/poster.jpg"></video>
  * ```
  */
-function extractDataFromAlt(alt: string) {
+const extractDataFromAlt = (alt: string) => {
   try {
     return JSON.parse(alt) as { [key: string]: any };
   } catch (error) {
     return alt;
   }
-}
+};
 
 export default NextMd;
 
