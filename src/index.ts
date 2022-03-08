@@ -167,7 +167,9 @@ const treeContentRepo = async (pathToContent: string, config: NextMdConfig) => {
       consoleLogNextmd('resolving contents from', logFromGit, `(${shouldUpdateGitRepoReason})`);
       fs.rmSync(pathToContent, { recursive: true, force: true });
       await cmd(
-        ['git', 'clone', branch ? `-b ${branch}` : undefined, remoteUrl, pathToContent].filter((e) => e).join(' '),
+        ['git', 'clone', branch ? `-b ${branch}` : undefined, '--depth 1', remoteUrl, pathToContent]
+          .filter((e) => e)
+          .join(' '),
       );
       fs.writeFileSync(pathToNextmdBranch, await cmd(`git -C ${pathToContent} rev-parse --abbrev-ref HEAD`));
       fs.writeFileSync(pathToNextmdLastUpdate, `${Date.now()}`);
