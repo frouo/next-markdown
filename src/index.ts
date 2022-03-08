@@ -73,6 +73,7 @@ const NextMd = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter ext
 
 const pathToLocalGitRepo = join(process.cwd(), '.git/next-md/');
 const pathToNextmdLastUpdate = join(process.cwd(), '.git/next-md-last-update');
+const pathToNextmdBranch = join(process.cwd(), '.git/next-md-branch');
 
 const consoleLogNextmd = (...args: (string | undefined | null)[]) => {
   args.unshift('[nextmd]');
@@ -80,7 +81,7 @@ const consoleLogNextmd = (...args: (string | undefined | null)[]) => {
 };
 
 const getContentPath = (config: NextMdConfig) => {
-  return config.contentGitRemoteUrl ? join(pathToLocalGitRepo, config.pathToContent) : config.pathToContent;
+  return config.contentGitRepo ? join(pathToLocalGitRepo, config.pathToContent) : config.pathToContent;
 };
 
 const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
@@ -115,41 +116,67 @@ const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
 };
 
 const treeContentRepo = async (pathToContent: string, config: NextMdConfig) => {
-  if (!config.contentGitRemoteUrl) {
-    consoleLogNextmd('creating page from', pathToContent);
-    return treeSync(pathToContent);
-  }
-
-  /**
-   * Returns the number of seconds elasped since the last update of the git remote repo.
-   */
-  const elapsedSecondsSinceLastUpdate = () => {
-    const lastRepoUpdateTxt = fs.readFileSync(pathToNextmdLastUpdate).toString('utf-8');
-    const lastUpdateMillis = parseInt(lastRepoUpdateTxt, 10);
-
-    return Date.now() - lastUpdateMillis;
-  };
-
-  /**
-   * Mechanism to avoid pulling the repo when `getStaticPaths` & `getStaticProps` is called.
-   *
-   * This ensures repo content is the same in `getStaticPaths` & `getStaticProps`.
-   */
-  const updateGitRepo = () => {
-    if (fs.existsSync(pathToNextmdLastUpdate) === false) {
-      return true;
+  if (config.contentGitRepo) {
+    const { remoteUrl, branch } = config.contentGitRepo;
+    if (!remoteUrl || !branch) {
+      throw Error('[nextmd] You must specify both git remote URL and branch when using `contentGitRepo`');
     }
 
-    return elapsedSecondsSinceLastUpdate() > 5 * 60 * 1000; // 5 minutes
-  };
+    /**
+     * @returns The number of seconds since the last update of the git remote repo.
+     */
+    const elapsedSecondsSinceLastUpdate = () => {
+      const lastRepoUpdateTxt = fs.readFileSync(pathToNextmdLastUpdate).toString('utf-8').trim();
+      const lastUpdateMillis = parseInt(lastRepoUpdateTxt, 10);
 
-  if (updateGitRepo()) {
-    consoleLogNextmd('resolving contents from', config.contentGitRemoteUrl);
-    fs.writeFileSync(pathToNextmdLastUpdate, `${Date.now()}`);
-    await cmd(`git -C ${pathToContent} pull || git clone ${config.contentGitRemoteUrl} ${pathToContent}`);
+      return Date.now() - lastUpdateMillis;
+    };
+
+    /**
+     *
+     * @returns The branche name of the last git clone
+     */
+    const branchLastUpdate = () => fs.readFileSync(pathToNextmdBranch).toString('utf-8').trim();
+
+    /**
+     * Mechanism to avoid pulling the repo when `getStaticPaths` & `getStaticProps` is called.
+     *
+     * This ensures repo content is the same in `getStaticPaths` & `getStaticProps`.
+     */
+    const shouldUpdateGitRepo = () => {
+      if (fs.existsSync(pathToNextmdLastUpdate) === false || fs.existsSync(pathToNextmdBranch) === false) {
+        return 'first time fetch';
+      }
+
+      const lastBranch = branchLastUpdate();
+      if (lastBranch !== branch) {
+        return ['was', lastBranch].join(' ');
+      }
+
+      if (elapsedSecondsSinceLastUpdate() > 5 * 60 * 1000) {
+        // 5 minutes
+        return 'last update was > 5 min ago';
+      }
+
+      return null;
+    };
+
+    const shouldUpdateGitRepoReason = shouldUpdateGitRepo();
+    const logFromGit = [remoteUrl, `branch`, branch].filter((e) => e).join(' ');
+    if (shouldUpdateGitRepoReason) {
+      consoleLogNextmd('resolving contents from', logFromGit, `(${shouldUpdateGitRepoReason})`);
+      fs.rmSync(pathToContent, { recursive: true, force: true });
+      await cmd(
+        ['git', 'clone', branch ? `-b ${branch}` : undefined, remoteUrl, pathToContent].filter((e) => e).join(' '),
+      );
+      fs.writeFileSync(pathToNextmdBranch, await cmd(`git -C ${pathToContent} rev-parse --abbrev-ref HEAD`));
+      fs.writeFileSync(pathToNextmdLastUpdate, `${Date.now()}`);
+    }
+
+    consoleLogNextmd('creating page from', logFromGit);
+  } else {
+    consoleLogNextmd('creating page from', pathToContent);
   }
-
-  consoleLogNextmd('creating page from', config.contentGitRemoteUrl);
 
   return treeSync(pathToContent);
 };
@@ -349,9 +376,18 @@ export type NextMdConfig = {
    * The place where your markdown files are stored.
    *
    * - if empty / undefined, your markdown files are considered to be in your current project at path `pathToContent`.
-   * - if specified, nextmd will pull or clone the repository and look for markdown files at path `pathToContent` in that repo.
+   * - if specified, nextmd will clone (or pull) the repository and look for markdown files at path `pathToContent` in that repo.
    */
-  contentGitRemoteUrl?: string;
+  contentGitRepo?: {
+    /**
+     * The git repository url.
+     */
+    remoteUrl: string;
+    /**
+     * The branch.
+     */
+    branch: string;
+  };
 };
 
 export type YAMLFrontMatter = { [key: string]: any };
