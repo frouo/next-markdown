@@ -39,6 +39,7 @@ Then, the following content tree will result into creating the following pages:
 pages/
 ├ index.jsx    .................. ➡️ /
 ├ caveat.jsx   .................. ➡️ /caveat
+├ [...nextmd].jsx
 
 pages-markdown/
 ├ about.md     .................. ➡️ /about
