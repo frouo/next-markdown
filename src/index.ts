@@ -81,7 +81,9 @@ const consoleLogNextmd = (...args: (string | undefined | null)[]) => {
 };
 
 const getContentPath = (config: NextMdConfig) => {
-  return config.contentGitRepo ? join(pathToLocalGitRepo, config.pathToContent) : config.pathToContent;
+  return config.contentGitRepo
+    ? join(pathToLocalGitRepo, config.pathToContent)
+    : join(process.cwd(), config.pathToContent);
 };
 
 const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
