@@ -9,15 +9,26 @@ import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 import type { Root } from 'mdast';
 
+/**
+ *
+ * @param config The config for the next-markdown module.
+ * @param debug Get more logs. Do not leave that to `true` for production.
+ * @returns The nextmd module, ready-to-use.
+ */
 const NextMd = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter extends PageFrontMatter>(
   config: NextMdConfig,
+  debug: boolean = false,
 ) => {
   return {
     getStaticPaths: async () => {
       const localRepoPath = getContentPath(config);
-      const tree = await treeContentRepo(localRepoPath, config);
+      const tree = await treeContentRepo(localRepoPath, config, debug);
       const files = flatFiles(tree);
       const staticContents = generatePathsFromFiles(files, localRepoPath);
+
+      if (debug) {
+        consoleLogNextmd('content found:', JSON.stringify(staticContents, null, 2));
+      }
 
       return {
         paths: staticContents.map((e) => ({
@@ -30,7 +41,7 @@ const NextMd = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter ext
     },
     getStaticProps: async (context: { params?: { nextmd: string[] } }) => {
       const localRepoPath = getContentPath(config);
-      const tree = await treeContentRepo(localRepoPath, config);
+      const tree = await treeContentRepo(localRepoPath, config, debug);
       const files = flatFiles(tree);
       const staticContents = generatePathsFromFiles(files, localRepoPath);
 
@@ -117,7 +128,7 @@ const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
       );
 };
 
-const treeContentRepo = async (pathToContent: string, config: NextMdConfig) => {
+const treeContentRepo = async (pathToContent: string, config: NextMdConfig, debug: boolean) => {
   if (config.contentGitRepo) {
     const { remoteUrl, branch } = config.contentGitRepo;
     if (!remoteUrl || !branch) {
@@ -164,9 +175,11 @@ const treeContentRepo = async (pathToContent: string, config: NextMdConfig) => {
     };
 
     const shouldUpdateGitRepoReason = shouldUpdateGitRepo();
-    const logFromGit = [remoteUrl, `branch`, branch].filter((e) => e).join(' ');
+    const logFromGit = [remoteUrl, `(Branch: ${branch})`].filter((e) => e).join(' ');
     if (shouldUpdateGitRepoReason) {
-      consoleLogNextmd('resolving contents from', logFromGit, `(${shouldUpdateGitRepoReason})`);
+      consoleLogNextmd(
+        ['cloning', logFromGit, debug ? `- ${shouldUpdateGitRepoReason}` : undefined].filter((e) => e).join(' '),
+      );
       fs.rmSync(pathToContent, { recursive: true, force: true });
       await cmd(
         ['git', 'clone', branch ? `-b ${branch}` : undefined, '--depth 1', remoteUrl, pathToContent]
