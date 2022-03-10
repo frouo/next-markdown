@@ -1,15 +1,19 @@
 # next-markdown
 
 Made for people:
+
 - having a [nextjs](https://nextjs.org/) project
 - in ❤️ with markdown
 - who want to generate boring (but very necessary!) pages like `/about`, `/terms`, `/blog` or `/whatever/other/route` from markdown files with 0 effort (eg. `about.md`, `whatever/other/route.md`)
 - (optional) who want these `.md` files to be hosted on a separate git repo
 
 Currently in use in:
+
 - lembot.com: all pages except the home page are generated from md files hosted on [github.com/frouo/lembot-public-website](https://github.com/frouo/lembot-public-website) using `next-markdown`
 
 ## Get started
+
+Install `next-markdown` in your nextjs project
 
 ```bash
 npm install next-markdown
@@ -39,7 +43,9 @@ export default function MarkdownPage({ frontMatter, html, posts, parentRoute }) 
 
 That's it 🎉
 
-As a result, the following nextjs project will result into creating the following pages:
+## Support Dynamic Routes
+
+After adding `[...nextmd].jsx` in your project, the following project structure will result into creating the following pages:
 
 ```
 pages/
@@ -61,6 +67,10 @@ pages-markdown/
   ├ 2022-02-02-my-thoughts.md  .. ➡️ /my-blog/my-thoughts
 ```
 
-## Demo
+## Examples
+
+Feel free to browse the [examples](https://github.com/frouo/next-markdown/tree/master/examples) to see `next-markdown` in action.
+
+## Live Demo
 
 ![nextmd demo](https://user-images.githubusercontent.com/2499356/157421649-6be78442-400c-43cd-81e5-27ba6da1ee7b.png)
