@@ -1,13 +1,13 @@
 # next-markdown
 
-Made for people:
+Made for people
 
 - having a [nextjs](https://nextjs.org/) project
 - in ❤️ with markdown
 - who want to generate boring (but very necessary!) pages like `/about`, `/terms`, `/blog` or `/whatever/other/route` from markdown files with 0 effort (eg. `about.md`, `whatever/other/route.md`)
 - (optional) who want these `.md` files to be hosted on a separate git repo
 
-Currently in use in:
+Currently in use in
 
 - lembot.com: all pages except the home page are generated from md files hosted on [github.com/frouo/lembot-public-website](https://github.com/frouo/lembot-public-website) using `next-markdown`
 
@@ -22,8 +22,6 @@ npm install next-markdown
 Add the following `[...nextmd].jsx` file in the `pages/` folder
 
 ```nodejs
-// file: pages/[...nextmd].jsx
-
 import NextMd from "next-markdown";
 
 const nextmd = NextMd({
@@ -37,7 +35,7 @@ export const getStaticPaths = nextmd.getStaticPaths;
 export const getStaticProps = nextmd.getStaticProps;
 
 export default function MarkdownPage({ frontMatter, html, posts, parentRoute }) {
-  return <div dangerouslySetInnerHTML={{ __html: html }} />
+  return <div dangerouslySetInnerHTML={{ __html: html }} /> 👈 design your own layout 🧑‍🎨
 }
 ```
 
@@ -55,7 +53,7 @@ pages/
 
 pages-markdown/
 ├ about.md     .................. ➡️ /about
-├ caveat.md    .................. ➡️ ❌ because /caveat already exists though caveat.jsx up there, cf. https://nextjs.org/docs/routing/dynamic-routes#caveats
+├ caveat.md    .................. ➡️ ❌ because `pages/caveat.jsx` takes precedence over [...nextmd] cf. https://nextjs.org/docs/routing/dynamic-routes#caveats
 ├ hello/
   ├ index.md   .................. ➡️ /hello
   ├ world.md   .................. ➡️ /hello/world
@@ -69,7 +67,7 @@ pages-markdown/
 
 ## Examples
 
-Feel free to browse the [examples](https://github.com/frouo/next-markdown/tree/master/examples) to see `next-markdown` in action.
+Feel free to browse the [examples](./examples) to see `next-markdown` in action.
 
 ## Live Demo
 

@@ -50,3 +50,14 @@ Dynamic routes continue to work as normal:
 - Create a file `blog/top-rated.md` to generate `/blog/top-rated`
 - Create a file `about.md` to generate `/about`
 - etc...
+
+## Run Demo
+
+```
+git clone https://github.com/frouo/next-markdown.git
+cd examples/blogging/
+npm install
+npm run dev
+```
+
+open [http://localhost:3000](http://localhost:3000)
