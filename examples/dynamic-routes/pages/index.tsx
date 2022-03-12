@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
 
-const markdownPages = ['/about', '/hello', '/hello/world', '/hello/jurassic/world', '/my-blog'];
+const markdownPages = ['/about', '/hello', '/hello/world', '/hello/jurassic/world'];
 
 const Home: NextPage = () => {
   return (

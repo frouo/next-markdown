@@ -16,7 +16,9 @@ const next = NextMd<MyFrontMatter, MyBlogPostFrontMatter>({
 export const getStaticProps = next.getStaticProps;
 export const getStaticPaths = next.getStaticPaths;
 
-export default function MyMarkdownPage({ html, frontMatter }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { html, frontMatter } = props;
+
   return (
     <>
       <Head>

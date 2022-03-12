@@ -1,8 +1,6 @@
 import { InferGetStaticPropsType } from 'next';
 import NextMd from 'next-markdown';
 import Head from 'next/head';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 type MyFrontMatter = { title: string };
 type MyBlogPostFrontMatter = MyFrontMatter & { author: string };
@@ -14,7 +12,9 @@ const next = NextMd<MyFrontMatter, MyBlogPostFrontMatter>({
 export const getStaticProps = next.getStaticProps;
 export const getStaticPaths = next.getStaticPaths;
 
-export default function MyMarkdownPage({ html, frontMatter }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { html, frontMatter } = props;
+
   return (
     <>
       <Head>

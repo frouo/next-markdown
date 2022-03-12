@@ -14,8 +14,9 @@ const next = NextMd<MyFrontMatter, BlogPostFrontMatter>({
 export const getStaticProps = next.getStaticProps;
 export const getStaticPaths = next.getStaticPaths;
 
-export default function MyMarkdownPage({ html, frontMatter, posts }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
+  const { html, frontMatter, posts } = props;
 
   return (
     <>

@@ -10,7 +10,7 @@ Why would you do that?
 - to avoid tons of commits like `Update about.md` or `Update 2021-07-15-keep-your-project-minimalist.md`, etc. in your app git
 - and maybe a lot more reasons (I am open to suggestion 🙂)
 
-## Run Demo
+## How To Run This Demo
 
 ```
 git clone https://github.com/frouo/next-markdown.git
