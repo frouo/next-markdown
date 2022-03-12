@@ -58,11 +58,9 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
       }
 
       const content = data[0];
+      const pageData = await getContentFromMarkdownFile<PageFrontMatter>(content.treeObject.path);
 
       const postsPageData = await getPostsFromNextmd<PostPageFrontMatter>(files, localRepoPath, nextmd);
-
-      const rawdata = fs.readFileSync(content.treeObject.path).toString('utf-8');
-      const pageData = await getPageDataFromMarkdownFileRawData<PageFrontMatter>(rawdata);
 
       return {
         props: {
@@ -112,8 +110,7 @@ const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
     ? null
     : await Promise.all(
         posts.map(async (e) => {
-          const rawdata = fs.readFileSync(e.file.path).toString('utf-8');
-          const postPageData = await getPageDataFromMarkdownFileRawData<T>(rawdata);
+          const postPageData = await getContentFromMarkdownFile<T>(e.file.path);
           const postNextmd = getNextmdFromFilePath(e.file.path, localRepoPath);
           return {
             ...postPageData,
@@ -301,7 +298,14 @@ const getSlugFromNextmd = (nextmd: string[]) => nextmd.slice(-1).pop() ?? ''; //
 
 const getParentFromNextmd = (nextmd: string[]) => '/' + nextmd.slice(0, -1).join('/'); // remove last element of array
 
-const getPageDataFromMarkdownFileRawData = async <T extends YAMLFrontMatter>(rawdata: string) => {
+const getContentFromMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string) => {
+  const rawdata = fs.readFileSync(filePath).toString('utf-8');
+  return getPageDataFromMarkdownFileRawData<T>(rawdata);
+};
+
+const getPageDataFromMarkdownFileRawData = async <T extends YAMLFrontMatter>(
+  rawdata: string,
+): Promise<{ frontMatter: T; html: string }> => {
   const { data, content } = matter(rawdata);
   const html = await markdownToHtml(content);
 
