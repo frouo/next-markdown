@@ -222,8 +222,6 @@ const exclude = (object: TreeObject) => {
   return false;
 };
 
-const include = (object: TreeObject) => !exclude(object);
-
 const treeSync = (path: string) => {
   const res = fs
     .readdirSync(path)
@@ -247,7 +245,7 @@ const treeSync = (path: string) => {
       )(fs),
     )
     .flatMap((f) => (f ? [f] : []))
-    .filter(include);
+    .filter((e) => exclude(e) === false);
 
   return res;
 };
