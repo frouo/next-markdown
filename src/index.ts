@@ -12,9 +12,9 @@ import type { Root } from 'mdast';
 /**
  *
  * @param config The config for the next-markdown module.
- * @returns The nextmd module, ready-to-use.
+ * @returns The next markdown module ready-to-use.
  */
-const NextMd = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter extends PageFrontMatter>(
+const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter extends PageFrontMatter>(
   config: Config,
 ) => {
   return {
@@ -373,7 +373,7 @@ const extractDataFromAlt = (alt: string) => {
   }
 };
 
-export default NextMd;
+export default NextMarkdown;
 
 // -----------
 // Types
