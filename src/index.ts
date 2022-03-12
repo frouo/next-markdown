@@ -15,7 +15,7 @@ import type { Root } from 'mdast';
  * @returns The nextmd module, ready-to-use.
  */
 const NextMd = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter extends PageFrontMatter>(
-  config: NextMdConfig,
+  config: Config,
 ) => {
   return {
     getStaticPaths: async () => {
@@ -89,7 +89,7 @@ const consoleLogNextmd = (...args: (string | undefined | null)[]) => {
   console.log.apply(this, args); // tslint:disable-line:no-console
 };
 
-const getContentPath = (config: NextMdConfig) => {
+const getContentPath = (config: Config) => {
   return config.contentGitRepo
     ? join(pathToLocalGitRepo, config.pathToContent)
     : join(process.cwd(), config.pathToContent);
@@ -126,7 +126,7 @@ const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
       );
 };
 
-const treeContentRepo = async (pathToContent: string, config: NextMdConfig) => {
+const treeContentRepo = async (pathToContent: string, config: Config) => {
   if (config.contentGitRepo) {
     const { remoteUrl, branch } = config.contentGitRepo;
     if (!remoteUrl || !branch) {
@@ -379,7 +379,7 @@ export default NextMd;
 // Types
 // -----------
 
-export type NextMdConfig = {
+export type Config = {
   /**
    * The place where to find your markdown files and folders.
    *
