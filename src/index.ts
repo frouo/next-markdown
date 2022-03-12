@@ -10,33 +10,50 @@ import { visit } from 'unist-util-visit';
 import type { Root } from 'mdast';
 
 /**
- *
  * @param config The config for the next-markdown module.
  * @returns The next markdown module ready-to-use.
  */
 const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter extends PageFrontMatter>(
-  config: Config,
+  config: Config<PageFrontMatter | PostPageFrontMatter>,
 ) => {
+  type UserFrontMatter = PageFrontMatter | PostPageFrontMatter;
+
+  const includeToApply = async (treeObject: File) =>
+    config.include
+      ? (async (fn: typeof config.include) => {
+          const content = await getContentFromMarkdownFile<UserFrontMatter>(treeObject.path);
+          return fn(treeObject, content.frontMatter, content.html);
+        })(config.include)
+      : treeObject.name !== 'README.md' && treeObject.name.startsWith('_') === false;
+
   return {
     getStaticPaths: async () => {
       const localRepoPath = getContentPath(config.pathToContent, config.contentGitRepo !== undefined);
       const tree = await treeContentRepo(localRepoPath, config);
       const files = flatFiles(tree);
-      const staticContents = generatePathsFromFiles(files, localRepoPath);
+      const staticContents = await Promise.all(
+        generatePathsFromFiles(files, localRepoPath).map(async (e) => ({
+          ...e,
+          include: await includeToApply(e.treeObject),
+        })),
+      );
 
       if (config.debug) {
-        consoleLogNextmd('content found:', JSON.stringify(staticContents, null, 2));
+        consoleLogNextmd('getStaticPaths:', JSON.stringify(staticContents));
       }
 
       return {
-        paths: staticContents.map((e) => ({
-          params: {
-            nextmd: e.nextmd,
-          },
-        })),
+        paths: staticContents
+          .filter((e) => e.include)
+          .map((e) => ({
+            params: {
+              nextmd: e.nextmd,
+            },
+          })),
         fallback: false, // See the "fallback" section below
       };
     },
+
     getStaticProps: async (context: { params?: { nextmd: string[] } }) => {
       const localRepoPath = getContentPath(config.pathToContent, config.contentGitRepo !== undefined);
       const tree = await treeContentRepo(localRepoPath, config);
@@ -61,13 +78,16 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
       const pageData = await getContentFromMarkdownFile<PageFrontMatter>(content.treeObject.path);
 
       const postsPageData = await getPostsFromNextmd<PostPageFrontMatter>(files, localRepoPath, nextmd);
+      const postsPageDataWithInclude = postsPageData
+        ? await Promise.all(postsPageData.map(async (e) => ({ ...e, include: await includeToApply(e.file) })))
+        : null;
 
       return {
         props: {
           ...pageData,
           slug: getSlugFromNextmd(nextmd),
           parentRoute: getParentFromNextmd(nextmd),
-          posts: postsPageData,
+          posts: postsPageDataWithInclude?.filter((e) => e.include).map((e) => e.data) ?? null,
         },
       };
     },
@@ -113,15 +133,18 @@ const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
           const postPageData = await getContentFromMarkdownFile<T>(e.file.path);
           const postNextmd = getNextmdFromFilePath(e.file.path, localRepoPath);
           return {
-            ...postPageData,
-            slug: getSlugFromNextmd(postNextmd),
-            date: e.date,
+            file: e.file,
+            data: {
+              ...postPageData,
+              slug: getSlugFromNextmd(postNextmd),
+              date: e.date,
+            },
           };
         }),
       );
 };
 
-const treeContentRepo = async (pathToContent: string, config: Config) => {
+const treeContentRepo = async <T extends YAMLFrontMatter>(pathToContent: string, config: Config<T>) => {
   if (config.contentGitRepo) {
     const { remoteUrl, branch } = config.contentGitRepo;
     if (!remoteUrl || !branch) {
@@ -204,10 +227,6 @@ const cmd = (commandLine: string) => {
 
 const exclude = (object: TreeObject) => {
   if (object.type === 'file' && object.name.endsWith('.md') === false) {
-    return true;
-  }
-
-  if (object.name === 'README.md') {
     return true;
   }
 
@@ -379,7 +398,7 @@ export default NextMarkdown;
 // Types
 // -----------
 
-export type Config = {
+export type Config<T extends YAMLFrontMatter> = {
   /**
    * The place where to find your markdown files and folders.
    *
@@ -403,6 +422,11 @@ export type Config = {
      */
     branch: string;
   };
+
+  /**
+   * A function that tells `next-markdown` to generate a route for the given file. By default `next-markdown` ignores "README.md" files or files name starting with an underscore (eg. `_draft.md`).
+   */
+  include?: (file: File, frontMatter: T, html: string) => boolean;
 
   /**
    * Get more logs. Make sure it is `false` for production.

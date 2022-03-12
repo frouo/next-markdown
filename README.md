@@ -10,10 +10,11 @@ Made for people
 Currently in use in
 
 - lembot.com: all pages except the home page are generated from md files hosted on [github.com/frouo/lembot-public-website](https://github.com/frouo/lembot-public-website) using `next-markdown`
+- create a PR to add your website or [DM](https://twitter.com/frouo)
 
-## Get started
+## Get Started
 
-Install `next-markdown` in your nextjs project
+In your nextjs project, run
 
 ```bash
 npm install next-markdown
@@ -41,9 +42,27 @@ export default function MarkdownPage({ frontMatter, html, posts, parentRoute }) 
 
 That's it 🎉
 
-## Support Dynamic Routes
+At the root of your project create a folder `pages-markdown/`, add a `hello.md` file
 
-After adding `[...nextmd].jsx` in your project, the following project structure will result into creating the following pages:
+```
+# Hello
+
+World 👋
+```
+
+You now have a `http://localhost:3000/hello` page.
+
+Enjoy.
+
+## Features
+
+### Dynamic Routes for Markdown Files
+
+Just like nextjs does with `pages/`.
+
+`next-markdown` generates paths based on the path of your markdown files.
+
+For example, the following project structure will result into creating the following pages:
 
 ```
 pages/
@@ -65,10 +84,22 @@ pages-markdown/
   ├ 2022-02-02-my-thoughts.md  .. ➡️ /my-blog/my-thoughts
 ```
 
+### Blog Aware
+
+`next-markdown` is blog-aware.
+
+All files whose name starts with `YYYY-MM-DD` are passed to the `index.md` in `props.posts`. See examples.
+
+### Caveat
+
+By default, `next-markdown` ignores `README.md` files and files whose name starts with an underscore (eg. `_draft.md`).
+
+This can be overriden by overriding the `include` function in the config object.
+
 ## Examples
 
 Feel free to browse the [examples](./examples) to see `next-markdown` in action.
 
-## Live Demo
+## Screenshot
 
 ![nextmd demo](https://user-images.githubusercontent.com/2499356/157421649-6be78442-400c-43cd-81e5-27ba6da1ee7b.png)
