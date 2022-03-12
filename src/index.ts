@@ -19,7 +19,7 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
 ) => {
   return {
     getStaticPaths: async () => {
-      const localRepoPath = getContentPath(config);
+      const localRepoPath = getContentPath(config.pathToContent, config.contentGitRepo !== undefined);
       const tree = await treeContentRepo(localRepoPath, config);
       const files = flatFiles(tree);
       const staticContents = generatePathsFromFiles(files, localRepoPath);
@@ -38,7 +38,7 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
       };
     },
     getStaticProps: async (context: { params?: { nextmd: string[] } }) => {
-      const localRepoPath = getContentPath(config);
+      const localRepoPath = getContentPath(config.pathToContent, config.contentGitRepo !== undefined);
       const tree = await treeContentRepo(localRepoPath, config);
       const files = flatFiles(tree);
       const staticContents = generatePathsFromFiles(files, localRepoPath);
@@ -89,10 +89,8 @@ const consoleLogNextmd = (...args: (string | undefined | null)[]) => {
   console.log.apply(this, args); // tslint:disable-line:no-console
 };
 
-const getContentPath = (config: Config) => {
-  return config.contentGitRepo
-    ? join(pathToLocalGitRepo, config.pathToContent)
-    : join(process.cwd(), config.pathToContent);
+const getContentPath = (pathToContent: string, remote: boolean) => {
+  return remote ? join(pathToLocalGitRepo, pathToContent) : join(process.cwd(), pathToContent);
 };
 
 const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
