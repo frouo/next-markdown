@@ -12,21 +12,19 @@ import type { Root } from 'mdast';
 /**
  *
  * @param config The config for the next-markdown module.
- * @param debug Get more logs. Do not leave that to `true` for production.
  * @returns The nextmd module, ready-to-use.
  */
 const NextMd = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter extends PageFrontMatter>(
   config: NextMdConfig,
-  debug: boolean = false,
 ) => {
   return {
     getStaticPaths: async () => {
       const localRepoPath = getContentPath(config);
-      const tree = await treeContentRepo(localRepoPath, config, debug);
+      const tree = await treeContentRepo(localRepoPath, config);
       const files = flatFiles(tree);
       const staticContents = generatePathsFromFiles(files, localRepoPath);
 
-      if (debug) {
+      if (config.debug) {
         consoleLogNextmd('content found:', JSON.stringify(staticContents, null, 2));
       }
 
@@ -41,7 +39,7 @@ const NextMd = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter ext
     },
     getStaticProps: async (context: { params?: { nextmd: string[] } }) => {
       const localRepoPath = getContentPath(config);
-      const tree = await treeContentRepo(localRepoPath, config, debug);
+      const tree = await treeContentRepo(localRepoPath, config);
       const files = flatFiles(tree);
       const staticContents = generatePathsFromFiles(files, localRepoPath);
 
@@ -128,7 +126,7 @@ const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
       );
 };
 
-const treeContentRepo = async (pathToContent: string, config: NextMdConfig, debug: boolean) => {
+const treeContentRepo = async (pathToContent: string, config: NextMdConfig) => {
   if (config.contentGitRepo) {
     const { remoteUrl, branch } = config.contentGitRepo;
     if (!remoteUrl || !branch) {
@@ -178,7 +176,7 @@ const treeContentRepo = async (pathToContent: string, config: NextMdConfig, debu
     const logFromGit = [remoteUrl, `(Branch: ${branch})`].filter((e) => e).join(' ');
     if (shouldUpdateGitRepoReason) {
       consoleLogNextmd(
-        ['cloning', logFromGit, debug ? `- ${shouldUpdateGitRepoReason}` : undefined].filter((e) => e).join(' '),
+        ['cloning', logFromGit, config.debug ? `- ${shouldUpdateGitRepoReason}` : undefined].filter((e) => e).join(' '),
       );
       fs.rmSync(pathToContent, { recursive: true, force: true });
       await cmd(
@@ -405,6 +403,11 @@ export type NextMdConfig = {
      */
     branch: string;
   };
+
+  /**
+   * Get more logs. Make sure it is `false` for production.
+   */
+  debug?: boolean;
 };
 
 export type YAMLFrontMatter = { [key: string]: any };
