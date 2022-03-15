@@ -86,7 +86,6 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
         props: {
           ...pageData,
           slug: getSlugFromNextmd(nextmd),
-          parentRoute: getParentFromNextmd(nextmd),
           posts: postsPageDataWithInclude?.filter((e) => e.include).map((e) => e.data) ?? null,
         },
       };
@@ -312,8 +311,6 @@ const getNextmdFromFilePath = (filePath: string, pathToLocalRepo: string) => {
 };
 
 const getSlugFromNextmd = (nextmd: string[]) => nextmd.slice(-1).pop() ?? ''; // last element without modifying the original array
-
-const getParentFromNextmd = (nextmd: string[]) => '/' + nextmd.slice(0, -1).join('/'); // remove last element of array
 
 const getContentFromMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string) => {
   const rawdata = fs.readFileSync(filePath).toString('utf-8');

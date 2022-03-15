@@ -32,7 +32,6 @@ Taking the above example, `index.md` will receive the `props`:
 ```
 props: {
     slug: "blog";
-    parentRoute: "/";
     html: "...";
     frontMatter: { ... };
     posts: [
