@@ -8,7 +8,7 @@ const Home: NextPage = () => {
     <div>
       <h1>My 100% custom home page</h1>
       <p>
-        This home page is custom, cf. <code>pages/index.ts</code>
+        This home page is custom, cf. <code>pages/index.tsx</code>
       </p>
       <p>
         Pages listed below are generated from markdown files in the <code>pages-markdown/</code> folder:

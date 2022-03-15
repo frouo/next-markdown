@@ -1,18 +1,18 @@
 import { InferGetStaticPropsType } from 'next';
-import NextMd from 'next-markdown';
+import NextMarkdown from 'next-markdown';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 type MyFrontMatter = { title: string };
-type BlogPostFrontMatter = MyFrontMatter & { author: string };
+type MyBlogPostFrontMatter = MyFrontMatter & { author: string };
 
-const next = NextMd<MyFrontMatter, BlogPostFrontMatter>({
+const nextmd = NextMarkdown<MyFrontMatter, MyBlogPostFrontMatter>({
   pathToContent: './pages-markdown',
 });
 
-export const getStaticProps = next.getStaticProps;
-export const getStaticPaths = next.getStaticPaths;
+export const getStaticProps = nextmd.getStaticProps;
+export const getStaticPaths = nextmd.getStaticPaths;
 
 export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();

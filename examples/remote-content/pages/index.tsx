@@ -8,7 +8,7 @@ const Home: NextPage = () => {
     <div>
       <h1>My 100% custom home page</h1>
       <p>
-        This page is generated from <code>pages/index.ts</code>
+        This page is generated from <code>pages/index.tsx</code>
       </p>
       <p>
         Pages listed below have been generated from another Git repository:{' '}
