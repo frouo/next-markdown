@@ -1,0 +1,10 @@
+{
+  "transform": {
+    "^.+\\.ts?$": "ts-jest",
+    "^.+\\.(js|jsx)$": "babel-jest"
+  },
+  "testEnvironment": "node",
+  "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+  "moduleFileExtensions": ["ts", "js"],
+  "transformIgnorePatterns": []
+}
