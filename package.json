@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "test": "jest --config jestconfig.json",
+    "dev": "npm run build -- --watch",
     "build": "rm -rf dist/ && tsc",
     "format": "prettier --write \"src/**/*.{js,ts}\"",
     "lint": "tslint -p tsconfig.json",
