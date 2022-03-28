@@ -16,7 +16,7 @@
     "watchDirectory": "useFsEvents",
     "fallbackPolling": "dynamicPriority",
     "synchronousWatchDirectory": true,
-    "excludeDirectories": ["**/node_modules"],
+    "excludeDirectories": ["**/node_modules", "**/examples", "**/__tests__"],
     "excludeFiles": []
   }
 }
