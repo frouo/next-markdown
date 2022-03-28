@@ -43,9 +43,7 @@ export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
           };
         }),
       );
-}; 
-
-
+};
 
 export const getSlugFromNextmd = (nextmd: string[]) => nextmd.slice(-1).pop() ?? ''; // last element without modifying the original array
 

@@ -94,7 +94,4 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
   };
 };
 
-
-
 export default NextMarkdown;
-
