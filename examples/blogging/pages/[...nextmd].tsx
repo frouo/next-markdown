@@ -27,11 +27,22 @@ export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof get
         {tableOfContents.length > 0 && (
           <div>
             <strong>Table of Contents</strong>
-            {tableOfContents.map(({ id, text, level }) => {
+            {tableOfContents.map((item) => {
               return (
-                <div key={id}>
-                  <a href={`#${id}`}>{text}</a>
-                </div>
+                <ul key={item.id}>
+                  <li>
+                    <a href={`#${item.id}`}>{item.text}</a>
+                  </li>
+                  {item.subItems.length > 0 && (
+                    <ol>
+                      {item.subItems.map((subItem) => (
+                        <li key={subItem.id}>
+                          <a href={`#${subItem.id}`}>{subItem.text}</a>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                </ul>
               );
             })}
           </div>

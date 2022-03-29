@@ -93,6 +93,12 @@ The rule is simple: all files whose name starts with `YYYY-MM-DD` are passed to 
 
 See the [example](./examples/blogging/).
 
+#### Table of Contents
+
+For each page you'll receive the Table of Contents based on the h2 and h3 headings used in the post.
+
+We've included it in the [blog example](./examples/blogging/).
+
 ### Fetch your .md files from another repo
 
 For many good reasons you probably want to host your content in another Git repo.
