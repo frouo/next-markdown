@@ -8,10 +8,10 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
-import { File, YAMLFrontMatter } from '../types';
+import { File, TableOfContents, YAMLFrontMatter } from '../types';
 import { extractDataFromAlt } from './alt';
 import { getNextmdFromFilePath } from './fs';
-import { getTableOfContents, TableOfContents } from './toc';
+import { getTableOfContents } from './toc';
 
 export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
   files: File[],

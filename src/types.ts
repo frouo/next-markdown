@@ -54,3 +54,12 @@ export type File = {
 };
 
 export type TreeObject = Dir | File;
+
+export interface TableOfContentItem {
+  text: string;
+  id: string;
+  level: number;
+  subItems: TableOfContentItem[];
+}
+
+export type TableOfContents = TableOfContentItem[];

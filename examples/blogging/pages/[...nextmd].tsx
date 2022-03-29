@@ -1,5 +1,5 @@
 import { InferGetStaticPropsType } from 'next';
-import NextMarkdown from 'next-markdown';
+import NextMarkdown, { TableOfContentItem } from 'next-markdown';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -14,6 +14,17 @@ const nextmd = NextMarkdown<MyFrontMatter, MyBlogPostFrontMatter>({
 export const getStaticProps = nextmd.getStaticProps;
 export const getStaticPaths = nextmd.getStaticPaths;
 
+const TableOfContentItem = (item: TableOfContentItem) => {
+  return (
+    <ul key={item.id}>
+      <li>
+        <a href={`#${item.id}`}>{item.text}</a>
+      </li>
+      {item.subItems.length > 0 && item.subItems.map((subItem) => <TableOfContentItem key={subItem.id} {...subItem} />)}
+    </ul>
+  );
+};
+
 export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
   const { html, frontMatter, posts, tableOfContents } = props;
@@ -27,24 +38,9 @@ export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof get
         {tableOfContents.length > 0 && (
           <div>
             <strong>Table of Contents</strong>
-            {tableOfContents.map((item) => {
-              return (
-                <ul key={item.id}>
-                  <li>
-                    <a href={`#${item.id}`}>{item.text}</a>
-                  </li>
-                  {item.subItems.length > 0 && (
-                    <ol>
-                      {item.subItems.map((subItem) => (
-                        <li key={subItem.id}>
-                          <a href={`#${subItem.id}`}>{subItem.text}</a>
-                        </li>
-                      ))}
-                    </ol>
-                  )}
-                </ul>
-              );
-            })}
+            {tableOfContents.map((item) => (
+              <TableOfContentItem key={item.id} {...item} />
+            ))}
           </div>
         )}
         <div dangerouslySetInnerHTML={{ __html: html }} />
