@@ -16,7 +16,7 @@ export const getStaticPaths = nextmd.getStaticPaths;
 
 export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
-  const { html, frontMatter, posts } = props;
+  const { html, frontMatter, posts, tableOfContents } = props;
 
   return (
     <>
@@ -24,6 +24,18 @@ export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof get
         <title>{frontMatter.title}</title>
       </Head>
       <div>
+        {tableOfContents.length > 0 && (
+          <div>
+            <strong>Table of Contents</strong>
+            {tableOfContents.map(({ id, text, level }) => {
+              return (
+                <div key={id}>
+                  <a href={`#${id}`}>{text}</a>
+                </div>
+              );
+            })}
+          </div>
+        )}
         <div dangerouslySetInnerHTML={{ __html: html }} />
         {posts && (
           <ul>

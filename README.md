@@ -162,6 +162,6 @@ npm run dev
 
 Before you make your pull request, make sure to run:
 
-- `npm test` to make sure anything is broken
+- `npm test` to make sure nothing is broken
 - `npm run format` to make sure the code looks consistent
 - `npm run lint` to make sure there is no problem in the code

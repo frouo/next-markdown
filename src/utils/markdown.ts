@@ -2,15 +2,16 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { Root } from 'mdast';
 import { join } from 'path';
+import rehypeSlug from 'rehype-slug';
 import rehypeStringify from 'rehype-stringify';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
-
 import { File, YAMLFrontMatter } from '../types';
 import { extractDataFromAlt } from './alt';
 import { getNextmdFromFilePath } from './fs';
+import { getTableOfContents, TableOfContents } from './toc';
 
 export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
   files: File[],
@@ -49,12 +50,13 @@ export const getSlugFromNextmd = (nextmd: string[]) => nextmd.slice(-1).pop() ??
 
 export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string) => {
   const rawdata = fs.readFileSync(filePath).toString('utf-8');
-  const { frontMatter, content } = parseMarkdownFileContent<T>(rawdata);
+  const { frontMatter, content, tableOfContents } = parseMarkdownFileContent<T>(rawdata);
   const html = await markdownToHtml(content);
 
   return {
     frontMatter,
     html,
+    tableOfContents,
   };
 };
 
@@ -65,6 +67,7 @@ export const parseMarkdownFileContent = <T extends YAMLFrontMatter>(rawdata: str
   return {
     frontMatter: isDataEmpty ? undefined : (data as T),
     content,
+    tableOfContents: getTableOfContents(content),
   };
 };
 
@@ -74,6 +77,7 @@ export const markdownToHtml = async (markdown: string) => {
     .use(remarkRehype)
     .use(rehypeVideos)
     .use(rehypeStringify)
+    .use(rehypeSlug)
     .process(markdown);
 
   return String(result);

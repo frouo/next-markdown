@@ -36,6 +36,6 @@ describe('markdown.ts', () => {
     const mdFileContent = '# Present yourself\n\nI am **next-markdown**';
     const html = await markdownToHtml(mdFileContent);
 
-    expect(html).toBe('<h1>Present yourself</h1>\n<p>I am <strong>next-markdown</strong></p>');
+    expect(html).toBe('<h1 id="present-yourself">Present yourself</h1>\n<p>I am <strong>next-markdown</strong></p>');
   });
 });
