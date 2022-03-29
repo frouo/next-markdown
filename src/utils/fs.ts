@@ -29,19 +29,22 @@ export const treeSync = (path: string) => {
     .readdirSync(path)
     .map((e) => ({ name: e, path: join(path, e) }))
     .map(
-      ((fileSystem: typeof fs) => (e): TreeObject | null => {
-        const isDir = fileSystem.lstatSync(e.path).isDirectory();
-        if (e.name === '.git') {
-          return null; // no need to inspect recursively this
-        } else {
-          return isDir
-            ? { type: 'dir', ...e, children: treeSync(e.path) }
-            : {
-                type: 'file',
-                ...e,
-              };
+      (
+        (fileSystem: typeof fs) =>
+        (e): TreeObject | null => {
+          const isDir = fileSystem.lstatSync(e.path).isDirectory();
+          if (e.name === '.git') {
+            return null; // no need to inspect recursively this
+          } else {
+            return isDir
+              ? { type: 'dir', ...e, children: treeSync(e.path) }
+              : {
+                  type: 'file',
+                  ...e,
+                };
+          }
         }
-      })(fs),
+      )(fs),
     )
     .flatMap((f) => (f ? [f] : []))
     .filter((e) => exclude(e) === false);
