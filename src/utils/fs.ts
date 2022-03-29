@@ -1,8 +1,8 @@
 import fs from 'fs';
 import { join } from 'path';
 
-import { File, TreeObject } from '../types';
-import { pathToLocalGitRepo } from './constants';
+import { File, TreeObject } from '../types.js';
+import { pathToLocalGitRepo } from './constants.js';
 
 export const getContentPath = (pathToContent: string, remote: boolean) => {
   return remote ? join(pathToLocalGitRepo, pathToContent) : join(process.cwd(), pathToContent);

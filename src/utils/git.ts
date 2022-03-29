@@ -1,10 +1,10 @@
 import fs from 'fs';
 
-import { Config, YAMLFrontMatter } from '../types';
-import { cmd } from './cmd';
-import { pathToNextmdBranch, pathToNextmdLastUpdate } from './constants';
-import { treeSync } from './fs';
-import { consoleLogNextmd } from './logger';
+import { Config, YAMLFrontMatter } from '../types.js';
+import { cmd } from './cmd.js';
+import { pathToNextmdBranch, pathToNextmdLastUpdate } from './constants.js';
+import { treeSync } from './fs.js';
+import { consoleLogNextmd } from './logger.js';
 
 export const treeContentRepo = async <T extends YAMLFrontMatter>(pathToContent: string, config: Config<T>) => {
   if (config.contentGitRepo) {

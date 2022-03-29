@@ -8,9 +8,9 @@ import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 
-import { File, YAMLFrontMatter } from '../types';
-import { extractDataFromAlt } from './alt';
-import { getNextmdFromFilePath } from './fs';
+import { File, YAMLFrontMatter } from '../types.js';
+import { extractDataFromAlt } from './alt.js';
+import { getNextmdFromFilePath } from './fs.js';
 
 export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
   files: File[],
