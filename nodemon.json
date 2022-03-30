@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ext": "ts",
+  "ignore": ["src/**/__tests__/**/*.ts"],
+  "exec": "ttsc"
+}
