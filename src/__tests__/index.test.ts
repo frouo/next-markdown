@@ -31,4 +31,11 @@ describe('markdown.ts', () => {
     expect(frontMatter).toBeUndefined();
     expect(content).toBe('# Heading');
   });
+
+  test('converts markdown to HTML', async () => {
+    const mdFileContent = '# Present yourself\n\nI am **next-markdown**';
+    const html = await markdownToHtml(mdFileContent);
+
+    expect(html).toBe('<h1>Present yourself</h1>\n<p>I am <strong>next-markdown</strong></p>');
+  });
 });
