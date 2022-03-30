@@ -49,18 +49,21 @@ export const getSlugFromNextmd = (nextmd: string[]) => nextmd.slice(-1).pop() ??
 
 export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string) => {
   const rawdata = fs.readFileSync(filePath).toString('utf-8');
-  return getPageDataFromMarkdownFileRawData<T>(rawdata);
-};
-
-export const getPageDataFromMarkdownFileRawData = async <T extends YAMLFrontMatter>(
-  rawdata: string,
-): Promise<{ frontMatter: T; html: string }> => {
-  const { data, content } = matter(rawdata);
+  const { frontMatter, content } = parseMarkdownFileContent<T>(rawdata);
   const html = await markdownToHtml(content);
 
   return {
-    frontMatter: data as T,
+    frontMatter,
     html,
+  };
+};
+
+export const parseMarkdownFileContent = <T extends YAMLFrontMatter>(rawdata: string) => {
+  const { data, content } = matter(rawdata);
+
+  return {
+    frontMatter: data as T,
+    content,
   };
 };
 
