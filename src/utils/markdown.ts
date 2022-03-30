@@ -11,7 +11,7 @@ import { visit } from 'unist-util-visit';
 import { File, TableOfContents, YAMLFrontMatter } from '../types';
 import { extractDataFromAlt } from './alt';
 import { getNextmdFromFilePath } from './fs';
-import { getTableOfContents } from './toc';
+import { getTableOfContents } from './table-of-contents';
 
 export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
   files: File[],

@@ -1,4 +1,4 @@
-import { getTableOfContents } from '../utils/toc';
+import { getTableOfContents } from '../utils/table-of-contents';
 
 describe('Table of Contents', () => {
   test('is created correctly', () => {
