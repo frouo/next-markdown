@@ -7,16 +7,14 @@
     "declaration": true,
     "outDir": "./dist",
     "strict": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "plugins": [
+      {
+        "transform": "./tools/module-transformer.ts",
+        "after": true
+      }
+    ]
   },
   "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*"],
-  "watchOptions": {
-    "watchFile": "useFsEvents",
-    "watchDirectory": "useFsEvents",
-    "fallbackPolling": "dynamicPriority",
-    "synchronousWatchDirectory": true,
-    "excludeDirectories": ["**/node_modules", "**/examples", "**/__tests__"],
-    "excludeFiles": []
-  }
+  "exclude": ["node_modules", "**/__tests__/*", "dist"]
 }
