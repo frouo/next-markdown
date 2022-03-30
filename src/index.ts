@@ -1,14 +1,8 @@
 import { Config, File, YAMLFrontMatter } from './types';
-import {
-  consoleLogNextmd,
-  flatFiles,
-  generatePathsFromFiles,
-  getContentFromMarkdownFile,
-  getContentPath,
-  getPostsFromNextmd,
-  getSlugFromNextmd,
-  treeContentRepo,
-} from './utils';
+import { flatFiles, generatePathsFromFiles, getContentPath } from './utils/fs';
+import { treeContentRepo } from './utils/git';
+import { consoleLogNextmd } from './utils/logger';
+import { getContentFromMarkdownFile, getPostsFromNextmd, getSlugFromNextmd } from './utils/markdown';
 
 /**
  * @param config The config for the next-markdown module.
@@ -95,4 +89,3 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
 };
 
 export default NextMarkdown;
-export * from './types';
