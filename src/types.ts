@@ -30,7 +30,7 @@ export type Config<T extends YAMLFrontMatter> = {
   /**
    * A function that tells `next-markdown` to generate a route for the given file. By default `next-markdown` ignores "README.md" files or files name starting with an underscore (eg. `_draft.md`).
    */
-  include?: (file: File, frontMatter: T, html: string) => boolean;
+  include?: (file: File, frontMatter: T | undefined, html: string) => boolean;
 
   /**
    * Get more logs. Make sure it is `false` for production.
