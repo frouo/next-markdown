@@ -1,5 +1,5 @@
 import NextMarkdown, { Config } from '..';
-import { parseMarkdownFileContent } from '../utils/markdown';
+import { markdownToHtml, parseMarkdownFileContent } from '../utils/markdown';
 
 describe('next-markdown', () => {
   test('loads correctly', () => {
@@ -21,6 +21,14 @@ describe('markdown.ts', () => {
     const { frontMatter, content } = parseMarkdownFileContent<{ title: string }>(mdFileContent);
 
     expect(frontMatter?.title).toBe('I am a title');
+    expect(content).toBe('# Heading');
+  });
+
+  test('frontMatter is undefined when md file content does not have front matter', () => {
+    const mdFileContent = '# Heading';
+    const { frontMatter, content } = parseMarkdownFileContent(mdFileContent);
+
+    expect(frontMatter).toBeUndefined();
     expect(content).toBe('# Heading');
   });
 });
