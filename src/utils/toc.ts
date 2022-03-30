@@ -11,7 +11,7 @@ export function getTableOfContents(mdContent: string) {
     let currentItem: TableOfContentItem;
     headings.forEach((heading) => {
       const headingText = heading[2].trim();
-      const headingLevel = heading[1].trim().length;
+      const headingLevel = heading[1].trim().length as TableOfContentItem['level'];
       const headingId = slugger.slug(headingText, false);
 
       const tocItem: TableOfContentItem = {
