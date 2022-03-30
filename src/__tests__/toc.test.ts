@@ -14,68 +14,7 @@ describe('Table of Contents', () => {
 # Title 9
 abc`.trim();
 
-    expect(getTableOfContents(content)).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "id": "Title 1",
-          "level": 1,
-          "subItems": Array [
-            Object {
-              "id": "Title 2",
-              "level": 2,
-              "subItems": Array [],
-              "text": "Title 2",
-            },
-            Object {
-              "id": "Title 3",
-              "level": 2,
-              "subItems": Array [
-                Object {
-                  "id": "Title 4",
-                  "level": 3,
-                  "subItems": Array [
-                    Object {
-                      "id": "Title 5",
-                      "level": 4,
-                      "subItems": Array [],
-                      "text": "Title 5",
-                    },
-                  ],
-                  "text": "Title 4",
-                },
-                Object {
-                  "id": "Title 6",
-                  "level": 3,
-                  "subItems": Array [],
-                  "text": "Title 6",
-                },
-              ],
-              "text": "Title 3",
-            },
-            Object {
-              "id": "Title 7",
-              "level": 2,
-              "subItems": Array [
-                Object {
-                  "id": "Title 8",
-                  "level": 3,
-                  "subItems": Array [],
-                  "text": "Title 8",
-                },
-              ],
-              "text": "Title 7",
-            },
-          ],
-          "text": "Title 1",
-        },
-        Object {
-          "id": "Title 9",
-          "level": 1,
-          "subItems": Array [],
-          "text": "Title 9",
-        },
-      ]
-    `);
+    expect(getTableOfContents(content)).toMatchSnapshot();
   });
 
   test('is created correctly without H1', () => {
@@ -87,41 +26,6 @@ abc`.trim();
 ### Title 5
 abc`.trim();
 
-    expect(getTableOfContents(content)).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "id": "Title 1",
-          "level": 2,
-          "subItems": Array [
-            Object {
-              "id": "Title 2",
-              "level": 4,
-              "subItems": Array [],
-              "text": "Title 2",
-            },
-            Object {
-              "id": "Title 3",
-              "level": 3,
-              "subItems": Array [],
-              "text": "Title 3",
-            },
-          ],
-          "text": "Title 1",
-        },
-        Object {
-          "id": "Title 4",
-          "level": 2,
-          "subItems": Array [
-            Object {
-              "id": "Title 5",
-              "level": 3,
-              "subItems": Array [],
-              "text": "Title 5",
-            },
-          ],
-          "text": "Title 4",
-        },
-      ]
-    `);
+    expect(getTableOfContents(content)).toMatchSnapshot();
   });
 });
