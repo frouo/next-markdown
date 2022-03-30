@@ -1,5 +1,5 @@
-import fs from 'fs';
-import matter from 'gray-matter';
+import * as fs from 'fs';
+import * as matter from 'gray-matter';
 import { Root } from 'mdast';
 import { join } from 'path';
 import rehypeStringify from 'rehype-stringify';

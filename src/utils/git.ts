@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 
 import { Config, YAMLFrontMatter } from '../types';
 import { cmd } from './cmd';
