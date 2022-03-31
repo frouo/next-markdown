@@ -11,7 +11,7 @@
     "test:watch": "jest --watch",
     "dev": "parcel watch",
     "build": "rm -rf dist/ && parcel build",
-    "format": "prettier --write \"src/**/*.{js,ts}\"",
+    "format": "prettier --write \"src/**/*.{js,ts}\" \"examples/**/*.{js,ts}\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
