@@ -12,11 +12,12 @@
     "dev": "parcel watch",
     "build": "rm -rf dist/ && parcel build",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint",
-    "preversion": "npm run lint",
-    "version": "npm run format && git add -A src",
+    "prepublishOnly": "npm run format:check && npm test && npm run lint",
+    "preversion": "npm run format:check && npm test && npm run lint",
+    "version": "npm --prefix examples/blogging i && npm --prefix examples/dynamic-routes i && npm --prefix examples/remote-content i && git add .",
     "postversion": "git push && git push --tags"
   },
   "repository": {
