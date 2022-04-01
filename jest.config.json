@@ -1,6 +1,12 @@
 {
-  "verbose": true,
   "transform": {
-    "^.+\\.tsx?$": "ts-jest"
-  }
+    "^.+\\.(js|jsx|ts|tsx)?$": "ts-jest"
+  },
+  "globals": {
+    "ts-jest": {
+      "tsconfig": "tsconfig.test.json"
+    }
+  },
+  "verbose": true,
+  "transformIgnorePatterns": []
 }

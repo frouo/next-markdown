@@ -2,3 +2,4 @@ node_modules
 /dist
 *.code-workspace
 .parcel-cache
+.DS_Store
