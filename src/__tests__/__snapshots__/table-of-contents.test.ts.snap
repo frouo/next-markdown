@@ -3,25 +3,25 @@
 exports[`Table of Contents is created correctly 1`] = `
 Array [
   Object {
-    "id": "Title 1",
+    "id": "title-1",
     "level": 1,
     "subItems": Array [
       Object {
-        "id": "Title 2",
+        "id": "title-2",
         "level": 2,
         "subItems": Array [],
         "text": "Title 2",
       },
       Object {
-        "id": "Title 3",
+        "id": "title-3",
         "level": 2,
         "subItems": Array [
           Object {
-            "id": "Title 4",
+            "id": "title-4",
             "level": 3,
             "subItems": Array [
               Object {
-                "id": "Title 5",
+                "id": "title-5",
                 "level": 4,
                 "subItems": Array [],
                 "text": "Title 5",
@@ -30,7 +30,7 @@ Array [
             "text": "Title 4",
           },
           Object {
-            "id": "Title 6",
+            "id": "title-6",
             "level": 3,
             "subItems": Array [],
             "text": "Title 6",
@@ -39,11 +39,11 @@ Array [
         "text": "Title 3",
       },
       Object {
-        "id": "Title 7",
+        "id": "title-7",
         "level": 2,
         "subItems": Array [
           Object {
-            "id": "Title 8",
+            "id": "title-8",
             "level": 3,
             "subItems": Array [],
             "text": "Title 8",
@@ -55,7 +55,7 @@ Array [
     "text": "Title 1",
   },
   Object {
-    "id": "Title 9",
+    "id": "title-9",
     "level": 1,
     "subItems": Array [],
     "text": "Title 9",
@@ -66,17 +66,17 @@ Array [
 exports[`Table of Contents is created correctly without H1 1`] = `
 Array [
   Object {
-    "id": "Title 1",
+    "id": "title-1",
     "level": 2,
     "subItems": Array [
       Object {
-        "id": "Title 2",
+        "id": "title-2",
         "level": 4,
         "subItems": Array [],
         "text": "Title 2",
       },
       Object {
-        "id": "Title 3",
+        "id": "title-3",
         "level": 3,
         "subItems": Array [],
         "text": "Title 3",
@@ -85,11 +85,11 @@ Array [
     "text": "Title 1",
   },
   Object {
-    "id": "Title 4",
+    "id": "title-4",
     "level": 2,
     "subItems": Array [
       Object {
-        "id": "Title 5",
+        "id": "title-5",
         "level": 3,
         "subItems": Array [],
         "text": "Title 5",
