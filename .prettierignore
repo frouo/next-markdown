@@ -1,3 +1,4 @@
 # Ignore artifacts:
 .next
+dist
 package-lock.json
