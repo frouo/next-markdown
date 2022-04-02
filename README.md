@@ -37,17 +37,17 @@ export default function MarkdownPage({ frontMatter, html, posts }) {
 }
 ```
 
-**That's it 🎉**
+## Usage 👋
 
-At the root of your project create a folder `pages-markdown/`, add a `hello.md` file
+At the root of your project create a folder `pages-markdown/`, add the following `hello.md` file
 
 ```
-# Hello
+# Hello World
 
-World 👋
+This is **awesome**
 ```
 
-You now have a `http://localhost:3000/hello` page.
+That's it. Open `http://localhost:3000/hello` page and see the magic.
 
 Enjoy.
 
@@ -139,11 +139,7 @@ npm install
 npm run dev
 ```
 
-<details><summary>screenshot</summary>
-
 ![terminal 1](https://user-images.githubusercontent.com/2499356/160489894-5eb85a94-0a03-4c73-bfef-eb68c030f865.jpg)
-
-</details>
 
 ### 3. Open **another terminal**, pick an example in the `examples/` folder, install dependencies and run dev
 
@@ -153,11 +149,7 @@ npm install
 npm run dev
 ```
 
-<details><summary>screenshot</summary>
-
 ![terminal 2](https://user-images.githubusercontent.com/2499356/160492988-1dc83947-1a74-46ba-aee8-4f66ecc70ed2.jpg)
-
-</details>
 
 ### 4. Start coding
 
