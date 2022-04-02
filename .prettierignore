@@ -1,2 +1,3 @@
 # Ignore artifacts:
 .next
+package-lock.json
