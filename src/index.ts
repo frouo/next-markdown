@@ -1,14 +1,8 @@
 import { Config, File, YAMLFrontMatter } from './types';
-import {
-  consoleLogNextmd,
-  flatFiles,
-  generatePathsFromFiles,
-  getContentFromMarkdownFile,
-  getContentPath,
-  getPostsFromNextmd,
-  getSlugFromNextmd,
-  treeContentRepo,
-} from './utils';
+import { flatFiles, generatePathsFromFiles, getContentPath } from './utils/fs';
+import { treeContentRepo } from './utils/git';
+import { consoleLogNextmd } from './utils/logger';
+import { readMarkdownFile, getPostsFromNextmd, getSlugFromNextmd } from './utils/markdown';
 
 /**
  * @param config The config for the next-markdown module.
@@ -22,7 +16,7 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
   const includeToApply = async (treeObject: File) =>
     config.include
       ? (async (fn: typeof config.include) => {
-          const content = await getContentFromMarkdownFile<UserFrontMatter>(treeObject.path);
+          const content = await readMarkdownFile<UserFrontMatter>(treeObject.path);
           return fn(treeObject, content.frontMatter, content.html);
         })(config.include)
       : treeObject.name !== 'README.md' && treeObject.name.startsWith('_') === false;
@@ -76,7 +70,7 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
       }
 
       const content = data[0];
-      const pageData = await getContentFromMarkdownFile<PageFrontMatter>(content.treeObject.path);
+      const pageData = await readMarkdownFile<PageFrontMatter>(content.treeObject.path);
 
       const postsPageData = await getPostsFromNextmd<PostPageFrontMatter>(files, localRepoPath, nextmd);
       const postsPageDataWithInclude = postsPageData
