@@ -1,7 +1,7 @@
 import slugger from 'github-slugger';
 import { TableOfContentItem, TableOfContents } from '../types';
 
-export function getTableOfContents(mdContent: string) {
+export const getTableOfContents = (mdContent: string) => {
   const regexp = new RegExp(/^(###### |##### |#### |### |## |# )(.*)\n/, 'gm');
   const headings = [...mdContent.matchAll(regexp)];
   const headingLevelMap = new Map<number, TableOfContentItem[]>();
@@ -53,4 +53,4 @@ export function getTableOfContents(mdContent: string) {
   }
 
   return tableOfContents;
-}
+};
