@@ -2,7 +2,6 @@ import { InferGetStaticPropsType } from 'next';
 import NextMarkdown, { TableOfContentItem } from 'next-markdown';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 type MyFrontMatter = { title: string };
 type MyBlogPostFrontMatter = MyFrontMatter & { author: string };
@@ -26,7 +25,6 @@ const TableOfContentItem = (item: TableOfContentItem) => {
 };
 
 export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
-  const router = useRouter();
   const { html, frontMatter, posts, tableOfContents } = props;
 
   return (
@@ -51,8 +49,8 @@ export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof get
               .map((post, index) => (
                 <li key={index}>
                   {post.date}{' '}
-                  <Link href={`${router.asPath}/${post.slug}`}>
-                    <a>{post.slug}</a>
+                  <Link href={post.nextmd.join('/')}>
+                    <a>{post.nextmd.slice(-1).pop()}</a>
                   </Link>{' '}
                   by {post.frontMatter.author}
                 </li>

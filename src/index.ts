@@ -2,7 +2,7 @@ import { Config, File, YAMLFrontMatter } from './types';
 import { flatFiles, generatePathsFromFiles, getContentPath } from './utils/fs';
 import { treeContentRepo } from './utils/git';
 import { consoleLogNextmd } from './utils/logger';
-import { readMarkdownFile, getPostsFromNextmd, getSlugFromNextmd } from './utils/markdown';
+import { readMarkdownFile, getPostsFromNextmd } from './utils/markdown';
 
 /**
  * @param config The config for the next-markdown module.
@@ -80,7 +80,7 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
       return {
         props: {
           ...pageData,
-          slug: getSlugFromNextmd(nextmd),
+          nextmd,
           posts: postsPageDataWithInclude?.filter((e) => e.include).map((e) => e.data) ?? null,
         },
       };

@@ -38,15 +38,13 @@ export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
             file: e.file,
             data: {
               ...postPageData,
-              slug: getSlugFromNextmd(postNextmd),
+              nextmd: postNextmd,
               date: e.date,
             },
           };
         }),
       );
 };
-
-export const getSlugFromNextmd = (nextmd: string[]) => nextmd.slice(-1).pop() ?? ''; // last element without modifying the original array
 
 export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string) => {
   const rawdata = fs.readFileSync(filePath).toString('utf-8');
