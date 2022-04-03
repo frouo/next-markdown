@@ -8,7 +8,7 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
-import { File, TableOfContents, YAMLFrontMatter } from '../types';
+import { File, YAMLFrontMatter } from '../types';
 import { extractDataFromAlt } from './alt';
 import { getNextmdFromFilePath } from './fs';
 import { getTableOfContents } from './table-of-contents';
