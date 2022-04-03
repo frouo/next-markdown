@@ -1,4 +1,23 @@
-# next-markdown
+<p align="center">
+   <br/>
+   <img width="150px" src="./logo.png" />
+   <h3 align="center">next-markdown</h3>
+   <p align="center">Markdown Pages for Next.js</p>
+   <p align="center">
+   Dynamic Routes. Blog Aware. Design Your Layout
+   </p>
+   <p align="center" style="align: center;">
+      <a href="https://www.npmtrends.com/next-markdown">
+        <img src="https://img.shields.io/npm/dm/next-markdown" alt="Downloads" />
+      </a>
+      <a href="https://github.com/frouo/next-markdown/stargazers">
+        <img src="https://img.shields.io/github/stars/frouo/next-markdown" alt="Github Stars" />
+      </a>
+      <a href="https://www.npmjs.com/package/next-markdown">
+        <img alt="npm (tag)" src="https://img.shields.io/npm/v/next-markdown/latest">
+      </a>
+   </p>
+</p>
 
 Made for people
 
@@ -12,7 +31,7 @@ Currently in use in
 - **lembot.com** : all pages except the home page are generated from md files hosted on [github.com/frouo/lembot-public-website](https://github.com/frouo/lembot-public-website)
 - create a PR to add your website or Twitter DM
 
-Follow [@nextmarkdown](https://twitter.com/nextmarkdown) on Twitter for updates.
+<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/nextmarkdown?style=social">
 
 ## Get Started ✨
 
@@ -89,17 +108,17 @@ pages-markdown/
 
 `next-markdown` is blog-aware.
 
-The rule is simple: all files whose name starts with `YYYY-MM-DD` are passed to the `index.md` in `props.posts`.
+The rule is simple: in a given folder (eg. `blog/`), all files whose name starts with `YYYY-MM-DD` (eg. `blog/2022-01-01-hello.md`) are passed to the rendering of `blog/index.md`, in `props.posts`.
 
 See the [example](./examples/blogging/).
 
-#### Table of Contents
+### Table of Contents
 
-For each page you'll receive the Table of Contents based on the h2 and h3 headings used in the post.
+For each page you'll receive the Table of Contents based on headings in your markdown.
 
-We've included it in the [blog example](./examples/blogging/).
+See the [example](./examples/blogging/).
 
-### Fetch your .md files from another repo
+### Host Your .md Files in Another Repo
 
 For many good reasons you probably want to host your content in another Git repo.
 
@@ -131,14 +150,14 @@ Feel free to browse the [examples](./examples) to see `next-markdown` in action.
 
 > Thanks for your interest in next-markdown! You are very welcome to contribute. If you are proposing a new feature, please [open an issue](https://github.com/frouo/next-markdown/issues/new) to make sure it is inline with the project goals.
 
-### 1. Fork this repository to your own GitHub account and clone it to your local device
+#### 1. Fork this repository to your own GitHub account and clone it to your local device
 
 ```bash
 git clone https://github.com/your-name/next-markdown.git
 cd next-markdown
 ```
 
-### 2. Install the dependencies and run dev script
+#### 2. Install the dependencies and run dev script
 
 ```bash
 npm install
@@ -147,7 +166,7 @@ npm run dev
 
 ![terminal 1](https://user-images.githubusercontent.com/2499356/160489894-5eb85a94-0a03-4c73-bfef-eb68c030f865.jpg)
 
-### 3. Open **another terminal**, pick an example in the `examples/` folder, install dependencies and run dev
+#### 3. Open **another terminal**, pick an example in the `examples/` folder, install dependencies and run dev
 
 ```bash
 cd examples/blogging # or dynamic-routes, or remote-content
@@ -157,17 +176,23 @@ npm run dev
 
 ![terminal 2](https://user-images.githubusercontent.com/2499356/160492988-1dc83947-1a74-46ba-aee8-4f66ecc70ed2.jpg)
 
-### 4. Start coding
+#### 4. Start coding
 
 - edit files in `src/`, save: http://localhost:3000 gets updated automatically (aka **hot-reloading**)
 - add tests in `src/__tests__/`. Run tests with `npm test` command.
 
 ![browser](https://user-images.githubusercontent.com/2499356/160491479-39b47264-5aec-4185-b472-f209d8a45181.jpg)
 
-### 5. Submitting a PR
+#### 5. Submitting a PR
 
 Before you make your pull request, make sure to run:
 
 - `npm test` to make sure nothing is broken
 - `npm run format` to make sure the code looks consistent
 - `npm run lint` to make sure there is no problem in the code
+
+## Contributors 🙏
+
+<a href="https://github.com/frouo/next-markdown/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=frouo/next-markdown" />
+</a>
