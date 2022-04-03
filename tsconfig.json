@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
     "types": ["jest", "node"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "downlevelIteration": true
   }
 }
