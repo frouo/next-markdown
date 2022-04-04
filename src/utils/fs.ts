@@ -1,6 +1,5 @@
 import fs from 'fs';
-import { join } from 'path';
-
+import { join, parse } from 'path';
 import { File, TreeObject } from '../types';
 import { pathToLocalGitRepo } from './constants';
 
@@ -71,10 +70,15 @@ export const generatePathsFromFiles = (files: File[], pathToLocalRepo: string) =
 };
 
 export const getNextmdFromFilePath = (filePath: string, pathToLocalRepo: string) => {
-  return (filePath.endsWith('index.md') ? filePath.replace('index.md', '') : filePath)
+  const parsedPath = parse(filePath);
+  const fileExtension = parsedPath.ext; // paht/to/index.mdx => ".mdx"
+  const fileName = parsedPath.name; // paht/to/index.mdx => "index"
+  const fileBase = parsedPath.base; // paht/to/index.mdx => "index.mdx"
+
+  return (fileName === 'index' ? filePath.replace(fileBase, '') : filePath)
     .replace(pathToLocalRepo, '')
-    .replace('.md', '')
-    .replace(/\/\d{4}-\d{2}-\d{2}(.)/, '/') // replace string starting with "/YYYY-MM-DD-" with "/"
+    .replace(fileExtension, '')
+    .replace(/\d{4}-\d{2}-\d{2}(.)/, '') // replace string starting with "YYYY-MM-DD-" with ""
     .split('/')
     .filter((e) => e);
 };

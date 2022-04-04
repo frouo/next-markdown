@@ -1,19 +1,27 @@
 import { getNextmdFromFilePath } from '../utils/fs';
 
-describe('md file', () => {
-  test('generate nextmd from path/index.md', () => {
-    expect(getNextmdFromFilePath('files/path/index.md', 'files')).toEqual(['path']);
+describe('nextmd', () => {
+  test('generate nextmd from path/index.abc', () => {
+    expect(getNextmdFromFilePath('files/path/index.abc', 'files')).toEqual(['path']);
   });
 
-  test('generate nextmd from path/hello.md', () => {
-    expect(getNextmdFromFilePath('files/path/hello.md', 'files')).toEqual(['path', 'hello']);
+  test('generate nextmd from path/hello.abc', () => {
+    expect(getNextmdFromFilePath('files/path/hello.abc', 'files')).toEqual(['path', 'hello']);
   });
 
-  test('generate nextmd from path/_hello.md', () => {
-    expect(getNextmdFromFilePath('path/_hello.md', './')).toEqual(['path', '_hello']);
+  test('generate nextmd from hello.abc', () => {
+    expect(getNextmdFromFilePath('hello.abc', './')).toEqual(['hello']);
   });
 
-  test('generate nextmd from path/1970-01-01-helloworld.md', () => {
-    expect(getNextmdFromFilePath('files/path/1970-01-01-helloworld.md', 'files')).toEqual(['path', 'helloworld']);
+  test('generate nextmd from _hello.abc', () => {
+    expect(getNextmdFromFilePath('_hello.abc', './')).toEqual(['_hello']);
+  });
+
+  test('generate nextmd from 1970-01-01-helloworld.abc', () => {
+    expect(getNextmdFromFilePath('1970-01-01-helloworld.abc', './')).toEqual(['helloworld']);
+  });
+
+  test('generate nextmd from path/1970-01-01-helloworld.abc', () => {
+    expect(getNextmdFromFilePath('path/1970-01-01-helloworld.abc', './')).toEqual(['path', 'helloworld']);
   });
 });
