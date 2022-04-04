@@ -8,7 +8,7 @@ export const getContentPath = (pathToContent: string, remote: boolean) => {
 };
 
 export const exclude = (object: TreeObject) => {
-  if (object.type === 'file' && object.name.endsWith('.md') === false) {
+  if (object.type === 'file' && object.name.endsWith('.md') === false && object.name.endsWith('.mdx') === false) {
     return true;
   }
 

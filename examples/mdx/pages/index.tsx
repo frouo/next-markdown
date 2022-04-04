@@ -8,7 +8,7 @@ const Home: NextPage = () => {
       <p>
         Open{' '}
         <Link href="/hello">
-          <a>hello.md</a>
+          <a>hello.mdx</a>
         </Link>
       </p>
     </div>
