@@ -3,6 +3,7 @@
     "types": ["jest", "node"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
     "noImplicitReturns": true,
     "strict": true,
     "noUnusedLocals": true,

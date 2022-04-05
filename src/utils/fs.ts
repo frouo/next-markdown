@@ -82,3 +82,5 @@ export const getNextmdFromFilePath = (filePath: string, pathToLocalRepo: string)
     .split('/')
     .filter((e) => e);
 };
+
+export const isMDX = (filePath: string) => filePath.endsWith('.mdx');

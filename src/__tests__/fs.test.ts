@@ -1,5 +1,5 @@
 import { TreeObject } from '../types';
-import { exclude, getNextmdFromFilePath } from '../utils/fs';
+import { exclude, getNextmdFromFilePath, isMDX } from '../utils/fs';
 
 describe('nextmd', () => {
   test('generate nextmd from path/index.abc', () => {
@@ -61,5 +61,23 @@ describe('tree object to exclude from generating a path', () => {
 
   test('exclude files if not .md or .mdx', () => {
     expect(exclude(aFileWithExt('abc'))).toBe(true);
+  });
+});
+
+describe('is mdx', () => {
+  test('path/to/hello.mdx is a MDX file', () => {
+    expect(isMDX('path/to/hello.mdx')).toBe(true);
+  });
+
+  test('hello.mdx is a MDX file', () => {
+    expect(isMDX('hello.mdx')).toBe(true);
+  });
+
+  test('hello.md is not a MDX file', () => {
+    expect(isMDX('hello.md')).toBe(false);
+  });
+
+  test('hello.abc is not a MDX file', () => {
+    expect(isMDX('hello.abc')).toBe(false);
   });
 });

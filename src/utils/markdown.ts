@@ -10,7 +10,7 @@ import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 import { File, YAMLFrontMatter } from '../types';
 import { extractDataFromAlt } from './alt';
-import { getNextmdFromFilePath } from './fs';
+import { getNextmdFromFilePath, isMDX } from './fs';
 import { getTableOfContents } from './table-of-contents';
 
 export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
@@ -47,13 +47,22 @@ export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
 };
 
 export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string) => {
+  const importMdxSerialize = async () => {
+    try {
+      return (await import('next-mdx-remote/serialize')).serialize;
+    } catch {
+      throw Error('mdx file detected. To enable MDX, install the `next-mdx-remote` dependency in your project.');
+    }
+  };
+
   const rawdata = fs.readFileSync(filePath).toString('utf-8');
   const { frontMatter, content, tableOfContents } = parseMarkdownFileContent<T>(rawdata);
-  const html = await markdownToHtml(content);
+  const mdx = isMDX(filePath);
 
   return {
     frontMatter,
-    html,
+    html: mdx ? null : await markdownToHtml(content),
+    mdxSource: mdx ? await importMdxSerialize().then((serialize) => serialize(content)) : null,
     tableOfContents,
   };
 };

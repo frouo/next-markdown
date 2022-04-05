@@ -11,6 +11,12 @@ const Home: NextPage = () => {
           <a>hello.mdx</a>
         </Link>
       </p>
+      <p>
+        Open{' '}
+        <Link href="/about">
+          <a>about.md</a>
+        </Link>
+      </p>
     </div>
   );
 };
