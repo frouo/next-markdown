@@ -16,8 +16,8 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
   const includeToApply = async (treeObject: File) =>
     config.include
       ? (async (fn: typeof config.include) => {
-          const content = await readMarkdownFile<UserFrontMatter>(treeObject.path);
-          return fn(treeObject, content.frontMatter, content.html);
+          const { frontMatter } = await readMarkdownFile<UserFrontMatter>(treeObject.path);
+          return fn(treeObject, frontMatter);
         })(config.include)
       : treeObject.name !== 'README.md' && treeObject.name.startsWith('_') === false;
 
