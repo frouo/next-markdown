@@ -60,10 +60,9 @@ export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: stri
 
 export const parseMarkdownFileContent = <T extends YAMLFrontMatter>(rawdata: string) => {
   const { data, content } = matter(rawdata);
-  const isDataEmpty = Object.keys(data).length === 0;
 
   return {
-    frontMatter: isDataEmpty ? undefined : (data as T),
+    frontMatter: data as T,
     content,
     tableOfContents: getTableOfContents(content),
   };

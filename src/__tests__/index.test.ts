@@ -24,11 +24,11 @@ describe('markdown.ts', () => {
     expect(content).toBe('# Heading');
   });
 
-  test('frontMatter is undefined when md file content does not have front matter', () => {
+  test('frontMatter is empty when md file content does not have front matter', () => {
     const mdFileContent = '# Heading';
     const { frontMatter, content } = parseMarkdownFileContent(mdFileContent);
 
-    expect(frontMatter).toBeUndefined();
+    expect(frontMatter).toEqual({});
     expect(content).toBe('# Heading');
   });
 
