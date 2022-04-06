@@ -1,4 +1,5 @@
-import { markdownToHtml, extractFrontMatter } from '../utils/markdown';
+import { TableOfContents } from '../types';
+import { markdownToHtml, extractFrontMatter, transformFileRawData } from '../utils/markdown';
 
 describe('extract front matter', () => {
   test('extracts front matter from md file content', () => {
@@ -24,5 +25,32 @@ describe('markdown to html', () => {
     const html = await markdownToHtml(mdFileContent);
 
     expect(html).toBe('<h1 id="present-yourself">Present yourself</h1>\n<p>I am <strong>next-markdown</strong></p>');
+  });
+});
+
+describe('transform file raw data into props', () => {
+  const rawdata = "---\ntitle: 'I am a title'\n---# This part will be mocked";
+  const data = { title: 'I am a title' };
+  const toc: TableOfContents = [{ text: 'Heading', id: 'heading', level: 1, subItems: [] }];
+  const plugins = {
+    markdownToHtml: () => Promise.resolve('<p>mock</p>'),
+    mdxSerialize: () => Promise.resolve({ compiledSource: 'js-something' }),
+    tableOfContents: () => toc,
+  };
+
+  test('from rawdata of a MD file', async () => {
+    const { frontMatter, html, mdxSource, tableOfContents } = await transformFileRawData(rawdata, 'md', plugins);
+    expect(frontMatter).toEqual(data);
+    expect(html).toBe('<p>mock</p>');
+    expect(mdxSource).toBeNull();
+    expect(tableOfContents).toEqual(toc);
+  });
+
+  test('from rawdata of a MDX file', async () => {
+    const { frontMatter, html, mdxSource, tableOfContents } = await transformFileRawData(rawdata, 'mdx', plugins);
+    expect(frontMatter).toEqual(data);
+    expect(html).toBeNull();
+    expect(mdxSource).toBeDefined();
+    expect(tableOfContents).toEqual(toc);
   });
 });
