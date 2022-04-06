@@ -6,6 +6,9 @@
   "main": "dist/main.js",
   "types": "dist/types.d.ts",
   "type": "module",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "dev": "parcel watch",
     "build": "rm -rf dist/ && parcel build",
