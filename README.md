@@ -118,6 +118,12 @@ For each page you'll receive the Table of Contents based on headings in your mar
 
 See the [example](./examples/blogging/).
 
+### MDX Support
+
+You can mix `.md` and `.mdx` files.
+
+See the [example](./examples/mdx/).
+
 ### Host Your .md Files in Another Repo
 
 For many good reasons you probably want to host your content in another Git repo.

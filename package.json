@@ -1,23 +1,27 @@
 {
   "name": "next-markdown",
-  "version": "1.2.0",
+  "version": "1.3.0-dev.1",
   "description": "Static pages generated from markdown files for your Next.js website.",
   "source": "src/index.ts",
   "main": "dist/main.js",
   "types": "dist/types.d.ts",
   "type": "module",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
     "dev": "parcel watch",
     "build": "rm -rf dist/ && parcel build",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "tslint -p tsconfig.json",
+    "install:examples": "npm --prefix examples/blogging i && npm --prefix examples/dynamic-routes i && npm --prefix examples/remote-content i && npm --prefix examples/mdx i",
     "prepare": "npm run build",
     "prepublishOnly": "npm run format:check && npm test && npm run lint",
     "preversion": "npm run format:check && npm test && npm run lint",
-    "version": "npm --prefix examples/blogging i && npm --prefix examples/dynamic-routes i && npm --prefix examples/remote-content i && git add .",
+    "version": "npm run install:examples && git add .",
     "postversion": "git push && git push --tags"
   },
   "repository": {
@@ -56,6 +60,7 @@
   "dependencies": {
     "github-slugger": "1.4.0",
     "gray-matter": "4.0.3",
+    "next-mdx-remote": "4.0.2",
     "rehype-remark": "9.1.2",
     "rehype-slug": "^5.0.1",
     "rehype-stringify": "9.0.3",

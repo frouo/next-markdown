@@ -1,6 +1,7 @@
 import fs from 'fs';
 import matter from 'gray-matter';
 import { Root } from 'mdast';
+import { MDXRemoteSerializeResult } from 'next-mdx-remote/dist/types';
 import { join } from 'path';
 import rehypeSlug from 'rehype-slug';
 import rehypeStringify from 'rehype-stringify';
@@ -8,9 +9,9 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
-import { File, YAMLFrontMatter } from '../types';
+import { File, TableOfContents, YAMLFrontMatter } from '../types';
 import { extractDataFromAlt } from './alt';
-import { getNextmdFromFilePath } from './fs';
+import { getNextmdFromFilePath, isMDX } from './fs';
 import { getTableOfContents } from './table-of-contents';
 
 export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
@@ -48,23 +49,40 @@ export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
 
 export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string) => {
   const rawdata = fs.readFileSync(filePath).toString('utf-8');
-  const { frontMatter, content, tableOfContents } = parseMarkdownFileContent<T>(rawdata);
-  const html = await markdownToHtml(content);
+  const mdx = isMDX(filePath);
+
+  return await transformFileRawData<T>(rawdata, mdx ? 'mdx' : 'md', {
+    markdownToHtml,
+    mdxSerialize: (await import('next-mdx-remote/serialize')).serialize,
+    tableOfContents: getTableOfContents,
+  });
+};
+
+export const transformFileRawData = async <T extends YAMLFrontMatter>(
+  rawdata: string,
+  type: 'md' | 'mdx',
+  plugins: {
+    markdownToHtml: (content: string) => Promise<string>;
+    mdxSerialize: (source: string) => Promise<MDXRemoteSerializeResult>;
+    tableOfContents: (content: string) => TableOfContents;
+  },
+) => {
+  const { frontMatter, content } = extractFrontMatter<T>(rawdata);
 
   return {
     frontMatter,
-    html,
-    tableOfContents,
+    html: type === 'md' ? await plugins.markdownToHtml(content) : null,
+    mdxSource: type === 'mdx' ? await plugins.mdxSerialize(content) : null,
+    tableOfContents: plugins.tableOfContents(content),
   };
 };
 
-export const parseMarkdownFileContent = <T extends YAMLFrontMatter>(rawdata: string) => {
+export const extractFrontMatter = <T extends YAMLFrontMatter>(rawdata: string) => {
   const { data, content } = matter(rawdata);
 
   return {
     frontMatter: data as T,
     content,
-    tableOfContents: getTableOfContents(content),
   };
 };
 
