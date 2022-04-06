@@ -1,9 +1,9 @@
-import { markdownToHtml, parseMarkdownFileContent } from '../utils/markdown';
+import { markdownToHtml, extractFrontMatter } from '../utils/markdown';
 
-describe('parse markdown file', () => {
+describe('extract front matter', () => {
   test('extracts front matter from md file content', () => {
     const mdFileContent = "---\ntitle: 'I am a title'\n---\n# Heading";
-    const { frontMatter, content } = parseMarkdownFileContent<{ title: string }>(mdFileContent);
+    const { frontMatter, content } = extractFrontMatter<{ title: string }>(mdFileContent);
 
     expect(frontMatter?.title).toBe('I am a title');
     expect(content).toBe('# Heading');
@@ -11,7 +11,7 @@ describe('parse markdown file', () => {
 
   test('frontMatter is empty when md file content does not have front matter', () => {
     const mdFileContent = '# Heading';
-    const { frontMatter, content } = parseMarkdownFileContent(mdFileContent);
+    const { frontMatter, content } = extractFrontMatter(mdFileContent);
 
     expect(frontMatter).toEqual({});
     expect(content).toBe('# Heading');

@@ -50,24 +50,23 @@ export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: stri
   const importMdxSerialize = async () => (await import('next-mdx-remote/serialize')).serialize;
 
   const rawdata = fs.readFileSync(filePath).toString('utf-8');
-  const { frontMatter, content, tableOfContents } = parseMarkdownFileContent<T>(rawdata);
+  const { frontMatter, content } = extractFrontMatter<T>(rawdata);
   const mdx = isMDX(filePath);
 
   return {
     frontMatter,
     html: mdx ? null : await markdownToHtml(content),
     mdxSource: mdx ? await importMdxSerialize().then((serialize) => serialize(content)) : null,
-    tableOfContents,
+    tableOfContents: getTableOfContents(content),
   };
 };
 
-export const parseMarkdownFileContent = <T extends YAMLFrontMatter>(rawdata: string) => {
+export const extractFrontMatter = <T extends YAMLFrontMatter>(rawdata: string) => {
   const { data, content } = matter(rawdata);
 
   return {
     frontMatter: data as T,
     content,
-    tableOfContents: getTableOfContents(content),
   };
 };
 
