@@ -60,6 +60,7 @@
   "dependencies": {
     "github-slugger": "1.4.0",
     "gray-matter": "4.0.3",
+    "next-mdx-remote": "4.0.2",
     "rehype-remark": "9.1.2",
     "rehype-slug": "^5.0.1",
     "rehype-stringify": "9.0.3",
@@ -67,8 +68,5 @@
     "remark-rehype": "10.1.0",
     "unified": "10.1.1",
     "unist-util-visit": "4.1.0"
-  },
-  "peerDependencies": {
-    "next-mdx-remote": "4.0.2"
   }
 }

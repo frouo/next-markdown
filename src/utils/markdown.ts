@@ -47,13 +47,7 @@ export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
 };
 
 export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string) => {
-  const importMdxSerialize = async () => {
-    try {
-      return (await import('next-mdx-remote/serialize')).serialize;
-    } catch {
-      throw Error('mdx file detected. To enable MDX, install the `next-mdx-remote` dependency in your project.');
-    }
-  };
+  const importMdxSerialize = async () => (await import('next-mdx-remote/serialize')).serialize;
 
   const rawdata = fs.readFileSync(filePath).toString('utf-8');
   const { frontMatter, content, tableOfContents } = parseMarkdownFileContent<T>(rawdata);
