@@ -1,7 +1,7 @@
 import fs from 'fs';
 import matter from 'gray-matter';
 import { Root } from 'mdast';
-import { MDXRemoteSerializeResult } from 'next-mdx-remote/dist/types';
+import { MDXRemoteSerializeResult, SerializeOptions } from 'next-mdx-remote/dist/types';
 import { join } from 'path';
 import rehypeSlug from 'rehype-slug';
 import rehypeStringify from 'rehype-stringify';
@@ -63,7 +63,10 @@ export const transformFileRawData = async <T extends YAMLFrontMatter>(
   type: 'md' | 'mdx',
   plugins: {
     markdownToHtml: (content: string) => Promise<string>;
-    mdxSerialize: (source: string) => Promise<MDXRemoteSerializeResult>;
+    mdxSerialize: (
+      source: string,
+      { scope, mdxOptions, parseFrontmatter }?: SerializeOptions,
+    ) => Promise<MDXRemoteSerializeResult>;
     tableOfContents: (content: string) => TableOfContents;
   },
 ) => {
@@ -72,7 +75,13 @@ export const transformFileRawData = async <T extends YAMLFrontMatter>(
   return {
     frontMatter,
     html: type === 'md' ? await plugins.markdownToHtml(content) : null,
-    mdxSource: type === 'mdx' ? await plugins.mdxSerialize(content) : null,
+    mdxSource:
+      type === 'mdx'
+        ? await plugins.mdxSerialize(content, {
+            mdxOptions: { rehypePlugins: [rehypeVideos, rehypeSlug] },
+            parseFrontmatter: false,
+          })
+        : null,
     tableOfContents: plugins.tableOfContents(content),
   };
 };
