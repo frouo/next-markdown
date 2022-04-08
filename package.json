@@ -11,7 +11,8 @@
   ],
   "scripts": {
     "dev": "parcel watch",
-    "build": "rm -rf dist/ && parcel build",
+    "build": "npm run clear && parcel build",
+    "clear": "rm -rf .parcel-cache && rm -rf dist/",
     "test": "jest",
     "test:watch": "jest --watch",
     "format": "prettier --write .",
