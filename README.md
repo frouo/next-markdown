@@ -80,8 +80,6 @@ Just like nextjs does with `pages/`.
 
 `next-markdown` generates paths based on the path of your markdown files.
 
-See the [example](./examples/dynamic-routes/).
-
 For example, the following project structure will result into creating the following pages:
 
 ```
@@ -104,11 +102,15 @@ pages-markdown/
   ├ 2022-02-02-my-thoughts.md  .. ➡️ /my-blog/my-thoughts
 ```
 
+See the [example](./examples/dynamic-routes/).
+
 ### Blog Aware
 
-`next-markdown` is blog-aware.
+`next-markdown` is blog-aware:
 
-The rule is simple: in a given folder (eg. `blog/`), all files whose name starts with `YYYY-MM-DD` (eg. `blog/2022-01-01-hello.md`) are passed to the rendering of `blog/index.md`, in `props.posts`.
+- list posts
+- calculate the estimated reading time
+- etc.
 
 See the [example](./examples/blogging/).
 
@@ -126,21 +128,9 @@ See the [example](./examples/mdx/).
 
 ### Host Your .md Files in Another Repo
 
-For many good reasons you probably want to host your content in another Git repo.
-
-For that, use the `contentGitRepo` param. Remember that _pathToContent_ is relative to provided git repo.
+For many good reasons you may want to host your content in another GIT repo.
 
 See the [example](./examples/remote-content/).
-
-```
-const nextmd = NextMarkdown({
-  pathToContent: "./",
-  contentGitRepo: {
-    remoteUrl: "https://path.to/your/content.git",
-    branch: "main"
-  }
-});
-```
 
 ### Caveat
 

@@ -52,7 +52,7 @@ export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof get
                   <Link href={post.nextmd.join('/')}>
                     <a>{post.nextmd.slice(-1).pop()}</a>
                   </Link>{' '}
-                  by {post.frontMatter.author}
+                  by {post.frontMatter.author} • {readingTime(post.markdown)} min read
                 </li>
               ))}
           </ul>
@@ -61,3 +61,9 @@ export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof get
     </>
   );
 }
+
+const readingTime = (content: string) => {
+  const wpm = 225;
+  const words = content.trim().split(/\s+/).length;
+  return Math.ceil(words / wpm);
+};
