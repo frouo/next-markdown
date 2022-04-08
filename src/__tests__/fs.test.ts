@@ -1,29 +1,54 @@
 import { TreeObject } from '../types';
-import { exclude, getNextmdFromFilePath, isMDX } from '../utils/fs';
+import { pathToContent, exclude, generateNextmd, isMDX } from '../utils/fs';
 
 describe('nextmd', () => {
-  test('generate nextmd from path/index.abc', () => {
-    expect(getNextmdFromFilePath('files/path/index.abc', 'files')).toEqual(['path']);
+  test('generate nextmd for "index" at the root', () => {
+    expect(generateNextmd('index.abc')).toEqual([]);
   });
 
-  test('generate nextmd from path/hello.abc', () => {
-    expect(getNextmdFromFilePath('files/path/hello.abc', 'files')).toEqual(['path', 'hello']);
+  test('generate nextmd for a nested index file"', () => {
+    expect(generateNextmd('path/index.abc')).toEqual(['path']);
   });
 
-  test('generate nextmd from hello.abc', () => {
-    expect(getNextmdFromFilePath('hello.abc', './')).toEqual(['hello']);
+  test('generate nextmd for a nested file', () => {
+    expect(generateNextmd('path/hello.abc')).toEqual(['path', 'hello']);
   });
 
-  test('generate nextmd from _hello.abc', () => {
-    expect(getNextmdFromFilePath('_hello.abc', './')).toEqual(['_hello']);
+  test('generate nextmd for a very nested file', () => {
+    expect(generateNextmd('path/to/a/file/hello.abc')).toEqual(['path', 'to', 'a', 'file', 'hello']);
   });
 
-  test('generate nextmd from 1970-01-01-helloworld.abc', () => {
-    expect(getNextmdFromFilePath('1970-01-01-helloworld.abc', './')).toEqual(['helloworld']);
+  test('generate nextmd for a file starting with "_"', () => {
+    // indeed, the fact to exclude file starting with "_" is not the responsibility of this function.
+    expect(generateNextmd('_hello.abc')).toEqual(['_hello']);
   });
 
-  test('generate nextmd from path/1970-01-01-helloworld.abc', () => {
-    expect(getNextmdFromFilePath('path/1970-01-01-helloworld.abc', './')).toEqual(['path', 'helloworld']);
+  test('exclude brackets at the beginning of the file name', () => {
+    expect(generateNextmd('[doc1]hello.abc')).toEqual(['hello']);
+  });
+
+  test('exclude brackets in the file name', () => {
+    expect(generateNextmd('_[doc1]hello.abc')).toEqual(['_hello']);
+  });
+
+  test('exclude only the first brackets occurence in the file name', () => {
+    expect(generateNextmd('_[doc1]hel[trap]lo.abc')).toEqual(['_hel[trap]lo']);
+  });
+
+  test('exclude brackets and any following whitespaces in the file name', () => {
+    expect(generateNextmd('[doc1]   hello.abc')).toEqual(['hello']);
+  });
+
+  test('check the brackets rule for a nested file', () => {
+    expect(generateNextmd('path/[doc1]hello.abc')).toEqual(['path', 'hello']);
+  });
+
+  test('ensure the brackets rule only applied to the file name', () => {
+    expect(generateNextmd('path/[brackets-rule-only-applied-to-filename]to/hello.abc')).toEqual([
+      'path',
+      '[brackets-rule-only-applied-to-filename]to',
+      'hello',
+    ]);
   });
 });
 
@@ -79,5 +104,23 @@ describe('is mdx', () => {
 
   test('hello.abc is not a MDX file', () => {
     expect(isMDX('hello.abc')).toBe(false);
+  });
+});
+
+describe('path to content creation', () => {
+  test('when using local config', () => {
+    expect(pathToContent('', false)).toBe('./');
+  });
+
+  test('when using local config with path', () => {
+    expect(pathToContent('path/to', false)).toBe('path/to');
+  });
+
+  test('when using remote config', () => {
+    expect(pathToContent('', true)).toBe('.git/next-md');
+  });
+
+  test('when using remote config with path', () => {
+    expect(pathToContent('path/to', true)).toBe('.git/next-md/path/to');
   });
 });

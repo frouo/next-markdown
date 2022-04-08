@@ -1,6 +1,7 @@
 ---
 title: 'Blog | Hello World'
 author: 'frouo'
+date: '2022-01-01'
 ---
 
 # Hello World 👋

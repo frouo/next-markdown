@@ -1,14 +1,19 @@
 import fs from 'fs';
-
-import { Config, YAMLFrontMatter } from '../types';
 import { cmd } from './cmd';
-import { pathToNextmdBranch, pathToNextmdLastUpdate } from './constants';
 import { treeSync } from './fs';
 import { consoleLogNextmd } from './logger';
 
-export const treeContentRepo = async <T extends YAMLFrontMatter>(pathToContent: string, config: Config<T>) => {
-  if (config.contentGitRepo) {
-    const { remoteUrl, branch } = config.contentGitRepo;
+const pathToNextmdLastUpdate = '.git/next-md-last-update';
+const pathToNextmdBranch = '.git/next-md-branch';
+
+type GitRepo = {
+  remoteUrl: string;
+  branch: string;
+};
+
+export const treeContentRepo = async (pathToContent: string, debug: boolean, gitRepo?: GitRepo) => {
+  if (gitRepo) {
+    const { remoteUrl, branch } = gitRepo;
     if (!remoteUrl || !branch) {
       throw Error('[nextmd] You must specify both git remote URL and branch when using `contentGitRepo`');
     }
@@ -56,7 +61,7 @@ export const treeContentRepo = async <T extends YAMLFrontMatter>(pathToContent: 
     const logFromGit = [remoteUrl, `(Branch: ${branch})`].filter((e) => e).join(' ');
     if (shouldUpdateGitRepoReason) {
       consoleLogNextmd(
-        ['cloning', logFromGit, config.debug ? `- ${shouldUpdateGitRepoReason}` : undefined].filter((e) => e).join(' '),
+        ['cloning', logFromGit, debug ? `- ${shouldUpdateGitRepoReason}` : undefined].filter((e) => e).join(' '),
       );
       fs.rmSync(pathToContent, { recursive: true, force: true });
       await cmd(

@@ -1,11 +1,9 @@
 import fs from 'fs';
-import { join, parse } from 'path';
+import { join, parse, sep } from 'path';
 import { File, TreeObject } from '../types';
-import { pathToLocalGitRepo } from './constants';
 
-export const getContentPath = (pathToContent: string, remote: boolean) => {
-  return remote ? join(pathToLocalGitRepo, pathToContent) : join(process.cwd(), pathToContent);
-};
+export const pathToContent = (userPathToContent: string, remote: boolean) =>
+  join(remote ? './.git/next-md' : './', userPathToContent);
 
 export const exclude = (object: TreeObject) => {
   if (object.type === 'file' && object.name.endsWith('.md') === false && object.name.endsWith('.mdx') === false) {
@@ -26,20 +24,22 @@ export const exclude = (object: TreeObject) => {
 export const treeSync = (path: string) => {
   const res = fs
     .readdirSync(path)
-    .map((e) => ({ name: e, path: join(path, e) }))
+    .map((e) => ({ name: e, dir: path }))
     .map(
       (
         (fileSystem: typeof fs) =>
         (e): TreeObject | null => {
-          const isDir = fileSystem.lstatSync(e.path).isDirectory();
+          const _path = join(e.dir, e.name);
+          const isDir = fileSystem.lstatSync(_path).isDirectory();
           if (e.name === '.git') {
             return null; // no need to inspect recursively this
           } else {
             return isDir
-              ? { type: 'dir', ...e, children: treeSync(e.path) }
+              ? { type: 'dir', name: e.name, path: _path, children: treeSync(_path) }
               : {
                   type: 'file',
-                  ...e,
+                  name: e.name,
+                  path: _path,
                 };
           }
         }
@@ -58,29 +58,24 @@ export const flatFiles = (tree: TreeObject[]): File[] => {
   return tree.flatMap(flatRecursively) as File[];
 };
 
-export const generatePathsFromFiles = (files: File[], pathToLocalRepo: string) => {
-  return files.map((e) => {
-    const nextmd = getNextmdFromFilePath(e.path, pathToLocalRepo);
-
-    return {
-      nextmd,
-      treeObject: e,
-    };
-  });
+export const generateNextmd = (relativeFilePath: string) => {
+  const parsed = parse(relativeFilePath);
+  if (parsed.name === 'index') {
+    return parsed.dir.split(sep).filter((e) => e);
+  } else {
+    return relativeFilePath.split(sep).map((e, index, arr) => {
+      if (index === arr.length - 1) {
+        return e
+          .replace(/\[(.*?)\](\s+)?/, '') // replace `[whatever-you-want]+whitespaces(if-any)` with ``
+          .replace(parsed.ext, '');
+      } else {
+        return e;
+      }
+    });
+  }
 };
 
-export const getNextmdFromFilePath = (filePath: string, pathToLocalRepo: string) => {
-  const parsedPath = parse(filePath);
-  const fileExtension = parsedPath.ext; // paht/to/index.mdx => ".mdx"
-  const fileName = parsedPath.name; // paht/to/index.mdx => "index"
-  const fileBase = parsedPath.base; // paht/to/index.mdx => "index.mdx"
-
-  return (fileName === 'index' ? filePath.replace(fileBase, '') : filePath)
-    .replace(pathToLocalRepo, '')
-    .replace(fileExtension, '')
-    .replace(/\d{4}-\d{2}-\d{2}(.)/, '') // replace string starting with "YYYY-MM-DD-" with ""
-    .split('/')
-    .filter((e) => e);
-};
+export const getPostFilesFromNextmd = async (files: File[], nextmd: string[]) =>
+  files.filter((e) => parse(e.path).dir === nextmd.join('/'));
 
 export const isMDX = (filePath: string) => filePath.endsWith('.mdx');

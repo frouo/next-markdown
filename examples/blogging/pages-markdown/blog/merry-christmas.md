@@ -1,6 +1,7 @@
 ---
 title: 'Blog | Merry Christmas'
 author: 'frouo'
+date: '2022-12-24'
 ---
 
 # Merry Christmas 🎄
