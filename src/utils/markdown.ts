@@ -74,6 +74,7 @@ export const transformFileRawData = async <T extends YAMLFrontMatter>(
 
   return {
     frontMatter,
+    markdown: content,
     html: type === 'md' ? await plugins.markdownToHtml(content) : null,
     mdxSource:
       type === 'mdx'
