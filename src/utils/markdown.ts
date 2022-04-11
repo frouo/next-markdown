@@ -28,7 +28,7 @@ export const transformFileRawData = async <T extends YAMLFrontMatter>(
   rawdata: string,
   type: 'md' | 'mdx',
   config: MarkdownPlugins,
-  plugins: {
+  transformers: {
     markdownToHtml: (content: string, config: MarkdownPlugins) => Promise<string>;
     mdxSerialize: (
       source: string,
@@ -42,10 +42,10 @@ export const transformFileRawData = async <T extends YAMLFrontMatter>(
   return {
     frontMatter,
     markdown: content,
-    html: type === 'md' ? await plugins.markdownToHtml(content, config) : null,
+    html: type === 'md' ? await transformers.markdownToHtml(content, config) : null,
     mdxSource:
       type === 'mdx'
-        ? await plugins.mdxSerialize(content, {
+        ? await transformers.mdxSerialize(content, {
             mdxOptions: {
               rehypePlugins: [rehypeVideos, rehypeSlug, ...(config.rehypePlugins || [])],
               remarkPlugins: config.remarkPlugins,
@@ -53,7 +53,7 @@ export const transformFileRawData = async <T extends YAMLFrontMatter>(
             parseFrontmatter: false,
           })
         : null,
-    tableOfContents: plugins.tableOfContents(content),
+    tableOfContents: transformers.tableOfContents(content),
   };
 };
 
