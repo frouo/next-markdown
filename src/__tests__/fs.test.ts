@@ -1,5 +1,6 @@
-import { TreeObject } from '../types';
-import { pathToContent, exclude, generateNextmd, isMDX } from '../utils/fs';
+import { join, parse } from 'path';
+import { Dir, File, TreeObject } from '../types';
+import { pathToContent, exclude, generateNextmd, isMDX, flatFiles } from '../utils/fs';
 
 describe('nextmd', () => {
   test('generate nextmd for "index" at the root', () => {
@@ -122,5 +123,54 @@ describe('path to content creation', () => {
 
   test('when using remote config with path', () => {
     expect(pathToContent('path/to', true)).toBe('.git/next-md/path/to');
+  });
+});
+
+describe('flat files', () => {
+  const createAFile = (name: string, dir: string): File => ({ type: 'file', name, path: join(dir, name) });
+  const createADir = (dir: string, children: TreeObject[]): Dir => ({
+    type: 'dir',
+    name: parse(dir).base,
+    path: dir,
+    children,
+  });
+
+  test('empty', () => {
+    expect(flatFiles([])).toEqual([]);
+  });
+
+  test('emty dirs', () => {
+    const dir1 = createADir('docs', []);
+    const dir2 = createADir('blog', []);
+    const tree: Dir[] = [dir1, dir2];
+    expect(JSON.stringify(flatFiles(tree))).toBe(`[]`);
+  });
+
+  test('only files', () => {
+    const file1 = createAFile('file1', './');
+    const file2 = createAFile('file2', './');
+    const tree: File[] = [file1, file2];
+    expect(JSON.stringify(flatFiles(tree))).toBe(`[${JSON.stringify(file1)},${JSON.stringify(file2)}]`);
+  });
+
+  test('file and dirs with nested files', () => {
+    const fileAbout = createAFile('about', './');
+    const fileDoc1 = createAFile('file1', './docs');
+    const fileDoc2 = createAFile('file2', './docs');
+    const folderDocs = createADir('docs', [fileDoc1, fileDoc2]);
+    const fileBlog1 = createAFile('file1', './blog');
+    const folderBlog = createADir('blog', [fileBlog1]);
+    expect(JSON.stringify(flatFiles([fileAbout, folderDocs, folderBlog]))).toBe(
+      `[${JSON.stringify(fileAbout)},${JSON.stringify(fileDoc1)},${JSON.stringify(fileDoc2)},${JSON.stringify(
+        fileBlog1,
+      )}]`,
+    );
+  });
+
+  test('file in a subfolder', () => {
+    const fileDoc1 = createAFile('file1', './docs/subfolder');
+    const folderSubfolder = createADir('./docs/subfolder', [fileDoc1]);
+    const folderDocs = createADir('docs', [folderSubfolder]);
+    expect(JSON.stringify(flatFiles([folderDocs]))).toBe(`[${JSON.stringify(fileDoc1)}]`);
   });
 });
