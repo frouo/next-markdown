@@ -82,7 +82,7 @@ export const transformFileRawData = async <T extends YAMLFrontMatter>(
       type === 'mdx'
         ? await plugins.mdxSerialize(content, {
             mdxOptions: {
-              rehypePlugins: (config.rehypePlugins || [])?.concat([rehypeVideos, rehypeSlug]),
+              rehypePlugins: [rehypeVideos, rehypeSlug, ...(config.rehypePlugins || [])],
               remarkPlugins: config.remarkPlugins,
             },
             parseFrontmatter: false,
@@ -108,13 +108,15 @@ export const markdownToHtml = async (markdown: string, config: MarkdownPlugins) 
   if (config.remarkPlugins) {
     processor.use(config.remarkPlugins);
   }
-  processor.use(remarkRehype);
+
+  processor.use(remarkRehype).use(rehypeVideos).use(rehypeSlug);
 
   // inject custom rehype plugins
   if (config.rehypePlugins) {
     processor.use(config.rehypePlugins);
   }
-  processor.use(remarkRehype).use(rehypeVideos).use(rehypeStringify).use(rehypeSlug);
+
+  processor.use(rehypeStringify);
 
   const result = await processor.process(markdown);
 
