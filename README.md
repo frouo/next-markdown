@@ -128,21 +128,23 @@ See the [example](./examples/mdx/).
 
 ### Configure custom remark and rehype plugins
 
-next-markdown comes with some default remark and rehype plugins to ensure its basic functionality.
+`next-markdown` comes with some default remark and rehype plugins to ensure its basic functionality.
 
 In some cases you might want to specify additional plugins to enrich your page with extra features.
 
-You can pass custom remark and rehype plugins via the next-markdown initializer config:
+You can pass custom remark and rehype plugins via the `next-markdown` initializer config:
 
 ```nodejs
 import NextMarkdown from "next-markdown";
 
 const nextmd = NextMarkdown({
-  pathToContent: "./pages-markdown",
+  ...,
   remarkPlugins: [],
   rehypePlugins: [],
 });
 ```
+
+See the [example](./examples/custom-remark-rehype-plugins/).
 
 ### Host Your .md Files in Another Repo
 
