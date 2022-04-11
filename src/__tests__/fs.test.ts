@@ -1,29 +1,55 @@
-import { TreeObject } from '../types';
-import { exclude, getNextmdFromFilePath, isMDX } from '../utils/fs';
+import { join, parse } from 'path';
+import { Dir, File, TreeObject } from '../types';
+import { pathToContent, exclude, generateNextmd, isMDX, flatFiles } from '../utils/fs';
 
 describe('nextmd', () => {
-  test('generate nextmd from path/index.abc', () => {
-    expect(getNextmdFromFilePath('files/path/index.abc', 'files')).toEqual(['path']);
+  test('generate nextmd for "index" at the root', () => {
+    expect(generateNextmd('index.abc')).toEqual([]);
   });
 
-  test('generate nextmd from path/hello.abc', () => {
-    expect(getNextmdFromFilePath('files/path/hello.abc', 'files')).toEqual(['path', 'hello']);
+  test('generate nextmd for a nested index file"', () => {
+    expect(generateNextmd('path/index.abc')).toEqual(['path']);
   });
 
-  test('generate nextmd from hello.abc', () => {
-    expect(getNextmdFromFilePath('hello.abc', './')).toEqual(['hello']);
+  test('generate nextmd for a nested file', () => {
+    expect(generateNextmd('path/hello.abc')).toEqual(['path', 'hello']);
   });
 
-  test('generate nextmd from _hello.abc', () => {
-    expect(getNextmdFromFilePath('_hello.abc', './')).toEqual(['_hello']);
+  test('generate nextmd for a very nested file', () => {
+    expect(generateNextmd('path/to/a/file/hello.abc')).toEqual(['path', 'to', 'a', 'file', 'hello']);
   });
 
-  test('generate nextmd from 1970-01-01-helloworld.abc', () => {
-    expect(getNextmdFromFilePath('1970-01-01-helloworld.abc', './')).toEqual(['helloworld']);
+  test('generate nextmd for a file starting with "_"', () => {
+    // indeed, the fact to exclude file starting with "_" is not the responsibility of this function.
+    expect(generateNextmd('_hello.abc')).toEqual(['_hello']);
   });
 
-  test('generate nextmd from path/1970-01-01-helloworld.abc', () => {
-    expect(getNextmdFromFilePath('path/1970-01-01-helloworld.abc', './')).toEqual(['path', 'helloworld']);
+  test('exclude brackets at the beginning of the file name', () => {
+    expect(generateNextmd('[doc1]hello.abc')).toEqual(['hello']);
+  });
+
+  test('exclude brackets in the file name', () => {
+    expect(generateNextmd('_[doc1]hello.abc')).toEqual(['_hello']);
+  });
+
+  test('exclude only the first brackets occurence in the file name', () => {
+    expect(generateNextmd('_[doc1]hel[trap]lo.abc')).toEqual(['_hel[trap]lo']);
+  });
+
+  test('exclude brackets and any following whitespaces in the file name', () => {
+    expect(generateNextmd('[doc1]   hello.abc')).toEqual(['hello']);
+  });
+
+  test('check the brackets rule for a nested file', () => {
+    expect(generateNextmd('path/[doc1]hello.abc')).toEqual(['path', 'hello']);
+  });
+
+  test('ensure the brackets rule only applied to the file name', () => {
+    expect(generateNextmd('path/[brackets-rule-only-applied-to-filename]to/hello.abc')).toEqual([
+      'path',
+      '[brackets-rule-only-applied-to-filename]to',
+      'hello',
+    ]);
   });
 });
 
@@ -79,5 +105,72 @@ describe('is mdx', () => {
 
   test('hello.abc is not a MDX file', () => {
     expect(isMDX('hello.abc')).toBe(false);
+  });
+});
+
+describe('path to content creation', () => {
+  test('when using local config', () => {
+    expect(pathToContent('', false)).toBe('./');
+  });
+
+  test('when using local config with path', () => {
+    expect(pathToContent('path/to', false)).toBe('path/to');
+  });
+
+  test('when using remote config', () => {
+    expect(pathToContent('', true)).toBe('.git/next-md');
+  });
+
+  test('when using remote config with path', () => {
+    expect(pathToContent('path/to', true)).toBe('.git/next-md/path/to');
+  });
+});
+
+describe('flat files', () => {
+  const createAFile = (name: string, dir: string): File => ({ type: 'file', name, path: join(dir, name) });
+  const createADir = (dir: string, children: TreeObject[]): Dir => ({
+    type: 'dir',
+    name: parse(dir).base,
+    path: dir,
+    children,
+  });
+
+  test('empty', () => {
+    expect(flatFiles([])).toEqual([]);
+  });
+
+  test('emty dirs', () => {
+    const dir1 = createADir('docs', []);
+    const dir2 = createADir('blog', []);
+    const tree: Dir[] = [dir1, dir2];
+    expect(JSON.stringify(flatFiles(tree))).toBe(`[]`);
+  });
+
+  test('only files', () => {
+    const file1 = createAFile('file1', './');
+    const file2 = createAFile('file2', './');
+    const tree: File[] = [file1, file2];
+    expect(JSON.stringify(flatFiles(tree))).toBe(`[${JSON.stringify(file1)},${JSON.stringify(file2)}]`);
+  });
+
+  test('file and dirs with nested files', () => {
+    const fileAbout = createAFile('about', './');
+    const fileDoc1 = createAFile('file1', './docs');
+    const fileDoc2 = createAFile('file2', './docs');
+    const folderDocs = createADir('docs', [fileDoc1, fileDoc2]);
+    const fileBlog1 = createAFile('file1', './blog');
+    const folderBlog = createADir('blog', [fileBlog1]);
+    expect(JSON.stringify(flatFiles([fileAbout, folderDocs, folderBlog]))).toBe(
+      `[${JSON.stringify(fileAbout)},${JSON.stringify(fileDoc1)},${JSON.stringify(fileDoc2)},${JSON.stringify(
+        fileBlog1,
+      )}]`,
+    );
+  });
+
+  test('file in a subfolder', () => {
+    const fileDoc1 = createAFile('file1', './docs/subfolder');
+    const folderSubfolder = createADir('./docs/subfolder', [fileDoc1]);
+    const folderDocs = createADir('docs', [folderSubfolder]);
+    expect(JSON.stringify(flatFiles([folderDocs]))).toBe(`[${JSON.stringify(fileDoc1)}]`);
   });
 });

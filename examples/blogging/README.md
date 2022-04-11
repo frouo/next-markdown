@@ -1,72 +1,112 @@
 # Blogging
 
-`next-markdown` is blog aware.
+`next-markdown` is blog-aware. Or docs-aware.
 
-## One Simple Rule
+## All Files Listed
 
-In a folder, all files that start with `YYYY-MM-DD` are passed as `props` to the `index.md` rendered page.
+`next-markdown` will automatically list all the files in a directory in the props `files` when `index.md` is rendered.
 
-Want to write drafts?
-
-By default `next-markdown` ignores `README.md` files and files whose name starts with an underscore (eg. `_YYYY-MM-DD-draft.md` or `_not-ready.md`). This behavior can be overriden by defining your own `include` in the nextmd initializer. For example:
-
-```
-{
-  include: (file, frontMatter) => file.name !== "README.md" && frontMatter.publish === true
-  // 👆 warning, with this example, ALL your md files must now have a boolean `publish` in its front matter.
-}
-```
-
-## Example
+### Example
 
 ```
 ├ blog/
   ├ index.md   .................. ➡️ /blog
-  ├ _1970-01-01-draft.md  ....... ➡️ ❌ because file name starts with "_"
-  ├ 2022-01-01-hello-world.md  .. ➡️ /blog/hello-world
-  ├ 2022-02-02-my-thoughts.md  .. ➡️ /blog/my-thoughts
+  ├ hello.md   .................. ➡️ /blog/hello
+  ├ world.md   .................. ➡️ /blog/world
 ```
 
-Taking the above example, `index.md` will receive the `props`:
+When rendering `index.md`, next-markdown will create and pass the following props (`/blog` route):
 
-```
+```json
 props: {
-    slug: "blog";
-    html: "...";
-    frontMatter: { ... };
-    posts: [
-      {
-        slug: "hello-world";
-        date: "2022-01-01";
-        frontMatter: { ... };
-        html: "...";
-      }, {
-        slug: "my-thoughts";
-        date: "2022-02-02";
-        frontMatter: { ... };
-        html: "...";
-      }
-    ]
+  nextmd: ["blog"],
+  html: ...,
+  frontMatter: { ... },
+  files: [
+    {
+      nextmd: ["blog", "hello"],
+      frontMatter: { ... },
+      html: ...
+    }, {
+      nextmd: ["blog", "world",
+      frontMatter: { ... },
+      html: ...
+    }
+  ]
 }
 ```
 
-Note:
+## Ignored Files
 
-- if no file is found, `props.posts` is `null`.
-- in this example, we named the folder `blog/` but it can been named to whatever you please, the route will match your folder name. We could have used `posts/` for example.
+By default `next-markdown` ignores:
 
-## Dynamic Routes Still Work
-
-Dynamic routes continue to work as normal:
-
-- Create a file `blog/top-rated.md` to generate `/blog/top-rated`
-- Create a file `about.md` to generate `/about`
-- etc...
-
-## How To Run This Demo
+- files whose name starts with an underscore `_`, eg: `_draft.md`
+- `README.md` files
 
 ```
+├ blog/
+  ├ index.md   .................. ➡️ /blog
+  ├ _draft.md  .................. ➡️ ❌ because file name starts with "_"
+```
+
+This behavior can be overriden by defining your own `include` in the initializer. For example:
+
+```javascript
+{
+  include: (file, frontMatter) => file.name !== 'README.md' && frontMatter.publish === true;
+  // 👆 warning, with this example, ALL your md files must now have a boolean `publish` in its front matter.
+}
+```
+
+## Files Classification
+
+You might want to classify your files in your directory.
+
+For that reason, `next-markdown` automatically ignores the first occurence of "`[text] `" in the markdown file name when creating its path.
+
+### Example
+
+```
+├ docs/
+  ├ index.md   .................. ➡️ /docs
+  ├ [doc-1] get-started.md   .... ➡️ /docs/get-started
+  ├ [doc-2] features.md   ....... ➡️ /docs/features
+  ├ [doc-3] contribute.md   ..... ➡️ /docs/contribute
+```
+
+When rendering `index.md`, next-markdown will create and pass the following props (`/docs` route):
+
+```json
+props: {
+  nextmd: ["docs"],
+  html: ...,
+  frontMatter: { ... },
+  files: [
+    {
+      nextmd: ["docs", "get-started"],
+      frontMatter: { ... },
+      html: ...
+    }, {
+      nextmd: ["docs", "features"],
+      frontMatter: { ... },
+      html: ...
+    }, {
+      nextmd: ["docs", "contribute"],
+      frontMatter: { ... },
+      html: ...
+    }
+  ]
+}
+```
+
+## Demo
+
+```shell
 git clone https://github.com/frouo/next-markdown.git
+cd next-markdown
+npm install
+npm run build
+
 cd examples/blogging/
 npm install
 npm run dev

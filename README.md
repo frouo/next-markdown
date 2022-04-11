@@ -51,7 +51,7 @@ const nextmd = NextMarkdown({ pathToContent: "./pages-markdown" });
 export const getStaticPaths = nextmd.getStaticPaths;
 export const getStaticProps = nextmd.getStaticProps;
 
-export default function MarkdownPage({ frontMatter, html, posts }) {
+export default function MarkdownPage({ frontMatter, html, files }) {
   return <div dangerouslySetInnerHTML={{ __html: html }} /> 👈 design your own layout 🧑‍🎨
 }
 ```
@@ -84,32 +84,37 @@ For example, the following project structure will result into creating the follo
 
 ```
 pages/
-├ index.jsx    .................. ➡️ /
-├ caveat.jsx   .................. ➡️ /caveat
+├ index.jsx    ......... ➡️ /
+├ caveat.jsx   ......... ➡️ /caveat
 ├ [...nextmd].jsx
 
 pages-markdown/
-├ about.md     .................. ➡️ /about
-├ caveat.md    .................. ➡️ ❌ because `pages/caveat.jsx` takes precedence over [...nextmd] cf. https://nextjs.org/docs/routing/dynamic-routes#caveats
+├ about.md     ......... ➡️ /about
+├ caveat.md    ......... ➡️ ❌ because `pages/caveat.jsx` takes precedence over [...nextmd] cf. https://nextjs.org/docs/routing/dynamic-routes#caveats
 ├ hello/
-  ├ index.md   .................. ➡️ /hello
-  ├ world.md   .................. ➡️ /hello/world
+  ├ index.md   ......... ➡️ /hello
+  ├ world.md   ......... ➡️ /hello/world
   ├ jurassic/
-    ├ park.md  .................. ➡️ /hello/jurassic/park
-├ my-blog/
-  ├ index.md   .................. ➡️ /my-blog with `props.posts` all the files in that director starting with YYYY-MM-DD
-  ├ 2022-01-01-hello-world.md  .. ➡️ /my-blog/hello-world
-  ├ 2022-02-02-my-thoughts.md  .. ➡️ /my-blog/my-thoughts
+    ├ park.md  ......... ➡️ /hello/jurassic/park
+├ blog/
+  ├ index.md   ......... ➡️ /blog with `props.files` all the files within its directory
+  ├ hello.md   ......... ➡️ /blog/hello
+  ├ world.md   ......... ➡️ /blog/world
+├ docs/
+  ├ index.md   ......... ➡️ /docs with `props.files` all the files within its directory
+  ├ get-started.md   ... ➡️ /docs/get-started
+  ├ features.md   ...... ➡️ /docs/features
+  ├ contribute.md   .... ➡️ /docs/contribute
 ```
 
 See the [example](./examples/dynamic-routes/).
 
 ### Blog Aware
 
-`next-markdown` is blog-aware:
+`next-markdown` is blog-aware, docs-aware, etc.:
 
-- list posts
-- calculate the estimated reading time
+- list all files
+- easy to calculate the estimated reading time
 - etc.
 
 See the [example](./examples/blogging/).

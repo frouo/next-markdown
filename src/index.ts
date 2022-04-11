@@ -1,8 +1,9 @@
+import { resolve, parse, relative } from 'path';
 import { Config, File, YAMLFrontMatter } from './types';
-import { flatFiles, generatePathsFromFiles, getContentPath } from './utils/fs';
+import { pathToContent, flatFiles, generateNextmd } from './utils/fs';
 import { treeContentRepo } from './utils/git';
 import { consoleLogNextmd } from './utils/logger';
-import { getPostsFromNextmd, readMarkdownFile } from './utils/markdown';
+import { readMarkdownFile } from './utils/markdown';
 
 /**
  * @param config The config for the next-markdown module.
@@ -13,47 +14,47 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
 ) => {
   type UserFrontMatter = PageFrontMatter | PostPageFrontMatter;
 
-  const includeToApply = async (treeObject: File) =>
+  const isContentFetchedFromRemote = config.contentGitRepo !== undefined;
+  const finalPathToContent = pathToContent(config.pathToContent, isContentFetchedFromRemote);
+  const relativeToAbsolute = (filePath: string) => resolve(finalPathToContent, filePath);
+  const absoluteToRelative = (filePath: string) => relative(finalPathToContent, filePath);
+
+  const includeToApply = async (file: File) =>
     config.include
       ? (async (fn: typeof config.include) => {
-          const { frontMatter } = await readMarkdownFile<UserFrontMatter>(treeObject.path, config);
-          return fn(treeObject, frontMatter);
+          const { frontMatter } = await readMarkdownFile<UserFrontMatter>(relativeToAbsolute(file.path), config);
+          return fn(file, frontMatter);
         })(config.include)
-      : treeObject.name !== 'README.md' && treeObject.name.startsWith('_') === false;
+      : file.name !== 'README.md' && file.name.startsWith('_') === false;
 
   return {
     getStaticPaths: async () => {
-      const localRepoPath = getContentPath(config.pathToContent, config.contentGitRepo !== undefined);
-      const tree = await treeContentRepo(localRepoPath, config);
-      const files = flatFiles(tree);
-      const staticContents = await Promise.all(
-        generatePathsFromFiles(files, localRepoPath).map(async (e) => ({
+      const tree = await treeContentRepo(relativeToAbsolute('.'), config.debug ?? false, config.contentGitRepo);
+      const allFiles = flatFiles(tree);
+      const allFilesWithInclude = await Promise.all(
+        allFiles.map(async (e) => ({
           ...e,
-          include: await includeToApply(e.treeObject),
+          include: await includeToApply(e),
         })),
       );
-
       if (config.debug) {
-        consoleLogNextmd('getStaticPaths:', JSON.stringify(staticContents));
+        consoleLogNextmd('getStaticPaths:', JSON.stringify(allFilesWithInclude));
       }
+      const files = allFilesWithInclude.filter((e) => e.include);
 
       return {
-        paths: staticContents
-          .filter((e) => e.include)
-          .map((e) => ({
-            params: {
-              nextmd: e.nextmd,
-            },
-          })),
+        paths: files.map((e) => ({
+          params: {
+            nextmd: generateNextmd(absoluteToRelative(e.path)),
+          },
+        })),
         fallback: false, // See the "fallback" section below
       };
     },
 
     getStaticProps: async (context: { params?: { nextmd: string[] } }) => {
-      const localRepoPath = getContentPath(config.pathToContent, config.contentGitRepo !== undefined);
-      const tree = await treeContentRepo(localRepoPath, config);
-      const files = flatFiles(tree);
-      const staticContents = generatePathsFromFiles(files, localRepoPath);
+      const tree = await treeContentRepo(relativeToAbsolute('.'), config.debug ?? false, config.contentGitRepo);
+      const allFiles = flatFiles(tree);
 
       const nextmd = context.params?.nextmd;
 
@@ -61,27 +62,36 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
         throw Error('Could not find params "nextmd". Do you name the file `[...nextmd].tsx` or `[...nextmd].jsx`?');
       }
 
-      const data = staticContents.filter((e) => JSON.stringify(e.nextmd) === JSON.stringify(nextmd));
+      const file = allFiles.find(
+        (e) => JSON.stringify(nextmd) === JSON.stringify(generateNextmd(absoluteToRelative(e.path))),
+      );
 
-      if (data.length === 0) {
-        throw Error(`Could not find markdown file for path /${nextmd.join('/')}`);
-      } else if (data.length > 1) {
-        throw Error(`Duplicate page detected ${data.map((e) => e.treeObject.path).join(', ')}`);
+      if (file === undefined) {
+        throw Error(`Could not find markdown file at path "${nextmd.join('/')}"`);
       }
 
-      const content = data[0];
-      const pageData = await readMarkdownFile<PageFrontMatter>(content.treeObject.path, config);
+      const pageData = await readMarkdownFile<PageFrontMatter>(relativeToAbsolute(file.path), config);
 
-      const postsPageData = await getPostsFromNextmd<PostPageFrontMatter>(files, localRepoPath, nextmd, config);
-      const postsPageDataWithInclude = postsPageData
-        ? await Promise.all(postsPageData.map(async (e) => ({ ...e, include: await includeToApply(e.file) })))
-        : null;
+      const filesInSameDir = allFiles
+        .filter((e) => e !== file) // remove itself
+        .filter((e) => JSON.stringify(nextmd) === JSON.stringify(absoluteToRelative(parse(e.path).dir).split('/'))); // get files in the same directory
+
+      const filesWanted = (
+        await Promise.all(filesInSameDir.map(async (e) => ({ ...e, include: await includeToApply(e) })))
+      ).filter((e) => e.include);
+
+      const filesData = await Promise.all(
+        filesWanted.map(async (e) => ({
+          ...(await readMarkdownFile<PostPageFrontMatter>(relativeToAbsolute(e.path), config)),
+          nextmd: generateNextmd(absoluteToRelative(e.path)),
+        })),
+      );
 
       return {
         props: {
           ...pageData,
           nextmd,
-          posts: postsPageDataWithInclude?.filter((e) => e.include).map((e) => e.data) ?? null,
+          files: filesData,
         },
       };
     },

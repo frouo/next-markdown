@@ -4,10 +4,11 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 type MyFrontMatter = { title: string };
-type MyBlogPostFrontMatter = MyFrontMatter & { author: string };
+type MyBlogPostFrontMatter = MyFrontMatter & { date: string; author: string };
 
 const nextmd = NextMarkdown<MyFrontMatter, MyBlogPostFrontMatter>({
   pathToContent: './pages-markdown',
+  debug: true,
 });
 
 export const getStaticProps = nextmd.getStaticProps;
@@ -25,7 +26,7 @@ const TableOfContentItem = (item: TableOfContentItem) => {
 };
 
 export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { html, frontMatter, posts, tableOfContents } = props;
+  const { html, frontMatter, files, tableOfContents } = props;
 
   return (
     <>
@@ -41,14 +42,15 @@ export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof get
             ))}
           </div>
         )}
+        <hr />
         <div dangerouslySetInnerHTML={{ __html: html }} />
-        {posts && (
+        {files && (
           <ul>
-            {posts
-              .sort((a, b) => b.date.localeCompare(a.date)) // sort by date
+            {files
+              .sort((a, b) => b.frontMatter.date.localeCompare(a.frontMatter.date)) // sort by date
               .map((post, index) => (
                 <li key={index}>
-                  {post.date}{' '}
+                  {post.frontMatter.date}{' '}
                   <Link href={post.nextmd.join('/')}>
                     <a>{post.nextmd.slice(-1).pop()}</a>
                   </Link>{' '}

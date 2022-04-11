@@ -1,6 +1,7 @@
 ---
 title: 'Blog | Apple Keynote'
 author: 'steeve'
+date: '2022-03-08'
 ---
 
 # Apple Keynote 🍏

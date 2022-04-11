@@ -2,51 +2,16 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { Root } from 'mdast';
 import { MDXRemoteSerializeResult, SerializeOptions } from 'next-mdx-remote/dist/types';
-import { join } from 'path';
 import rehypeSlug from 'rehype-slug';
 import rehypeStringify from 'rehype-stringify';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
-import { Config, File, MarkdownPlugins, TableOfContents, YAMLFrontMatter } from '../types';
+import { Config, MarkdownPlugins, TableOfContents, YAMLFrontMatter } from '../types';
 import { extractDataFromAlt } from './alt';
-import { getNextmdFromFilePath, isMDX } from './fs';
+import { isMDX } from './fs';
 import { getTableOfContents } from './table-of-contents';
-
-export const getPostsFromNextmd = async <T extends YAMLFrontMatter>(
-  files: File[],
-  localRepoPath: string,
-  nextmd: string[],
-  config: Config<T>,
-) => {
-  type PostFile = { file: File; date: string };
-
-  const posts = files.reduce<PostFile[]>((prev, curr) => {
-    const matches = curr.name.match(/^\d{4}-\d{2}-\d{2}/i);
-    if (curr.path.startsWith(join(localRepoPath, nextmd.join('/'))) && matches && matches.length > 0) {
-      return prev.concat([{ file: curr, date: matches[0] }]);
-    }
-    return prev;
-  }, []);
-
-  return posts.length === 0
-    ? null
-    : await Promise.all(
-        posts.map(async (e) => {
-          const postPageData = await readMarkdownFile<T>(e.file.path, config);
-          const postNextmd = getNextmdFromFilePath(e.file.path, localRepoPath);
-          return {
-            file: e.file,
-            data: {
-              ...postPageData,
-              nextmd: postNextmd,
-              date: e.date,
-            },
-          };
-        }),
-      );
-};
 
 export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string, config: Config<T>) => {
   const rawdata = fs.readFileSync(filePath).toString('utf-8');
