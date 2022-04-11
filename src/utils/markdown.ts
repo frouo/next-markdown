@@ -8,12 +8,12 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
-import { Config, MarkdownPlugins, TableOfContents, YAMLFrontMatter } from '../types';
+import { MarkdownPlugins, TableOfContents, YAMLFrontMatter } from '../types';
 import { extractDataFromAlt } from './alt';
 import { isMDX } from './fs';
 import { getTableOfContents } from './table-of-contents';
 
-export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string, config: Config<T>) => {
+export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string, config: MarkdownPlugins) => {
   const rawdata = fs.readFileSync(filePath).toString('utf-8');
   const mdx = isMDX(filePath);
 
@@ -27,9 +27,9 @@ export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: stri
 export const transformFileRawData = async <T extends YAMLFrontMatter>(
   rawdata: string,
   type: 'md' | 'mdx',
-  config: Config<T>,
+  config: MarkdownPlugins,
   plugins: {
-    markdownToHtml: (content: string, config: Config<T>) => Promise<string>;
+    markdownToHtml: (content: string, config: MarkdownPlugins) => Promise<string>;
     mdxSerialize: (
       source: string,
       { scope, mdxOptions, parseFrontmatter }?: SerializeOptions,
