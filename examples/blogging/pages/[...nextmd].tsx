@@ -26,7 +26,7 @@ const TableOfContentItem = (item: TableOfContentItem) => {
 };
 
 export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { html, frontMatter, posts, tableOfContents } = props;
+  const { html, frontMatter, files, tableOfContents } = props;
 
   return (
     <>
@@ -44,9 +44,9 @@ export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof get
         )}
         <hr />
         <div dangerouslySetInnerHTML={{ __html: html }} />
-        {posts && (
+        {files && (
           <ul>
-            {posts
+            {files
               .sort((a, b) => b.frontMatter.date.localeCompare(a.frontMatter.date)) // sort by date
               .map((post, index) => (
                 <li key={index}>

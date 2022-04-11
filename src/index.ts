@@ -72,31 +72,26 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
 
       const pageData = await readMarkdownFile<PageFrontMatter>(relativeToAbsolute(file.path), config);
 
-      const postsFiles = allFiles
+      const filesInSameDir = allFiles
         .filter((e) => e !== file) // remove itself
         .filter((e) => JSON.stringify(nextmd) === JSON.stringify(absoluteToRelative(parse(e.path).dir).split('/'))); // get files in the same directory
 
-      const postsFilesWithInclude = await Promise.all(
-        postsFiles.map(async (e) => ({ ...e, include: await includeToApply(e) })),
-      );
+      const filesWanted = (
+        await Promise.all(filesInSameDir.map(async (e) => ({ ...e, include: await includeToApply(e) })))
+      ).filter((e) => e.include);
 
-      const postsPageData = await Promise.all(
-        postsFilesWithInclude
-          .filter((e) => e.include)
-          .map(async (e) => {
-            const data = await readMarkdownFile<PostPageFrontMatter>(relativeToAbsolute(e.path), config);
-            return {
-              ...data,
-              nextmd: generateNextmd(absoluteToRelative(e.path)),
-            };
-          }),
+      const filesData = await Promise.all(
+        filesWanted.map(async (e) => ({
+          ...(await readMarkdownFile<PostPageFrontMatter>(relativeToAbsolute(e.path), config)),
+          nextmd: generateNextmd(absoluteToRelative(e.path)),
+        })),
       );
 
       return {
         props: {
           ...pageData,
           nextmd,
-          posts: postsPageData,
+          files: filesData,
         },
       };
     },
