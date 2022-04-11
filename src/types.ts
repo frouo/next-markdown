@@ -2,7 +2,21 @@
 // Types
 // -----------
 
-export type Config<T extends YAMLFrontMatter> = {
+import { PluggableList } from 'unified';
+
+export type MarkdownPlugins = {
+  /**
+   * Pass a list of remark plugins which will be used to process the markdown.
+   */
+  remarkPlugins?: PluggableList;
+
+  /**
+   * Pass a list of rehype plugins which will be used to process the markdown.
+   */
+  rehypePlugins?: PluggableList;
+};
+
+export type Config<T extends YAMLFrontMatter> = MarkdownPlugins & {
   /**
    * The place where to find your markdown files and folders.
    *
