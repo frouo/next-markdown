@@ -1,5 +1,7 @@
-import { TableOfContents } from '../types';
+import { Config, TableOfContents, YAMLFrontMatter } from '../types';
 import { extractFrontMatter, markdownToHtml, transformFileRawData } from '../utils/markdown';
+
+const NEXTMD_CONFIG: Config<YAMLFrontMatter> = { pathToContent: './' };
 
 describe('extract front matter', () => {
   test('extracts front matter from md file content', () => {
@@ -22,7 +24,7 @@ describe('extract front matter', () => {
 describe('markdown to html', () => {
   test('converts markdown to HTML', async () => {
     const mdFileContent = '# Present yourself\n\nI am **next-markdown**';
-    const html = await markdownToHtml(mdFileContent);
+    const html = await markdownToHtml(mdFileContent, NEXTMD_CONFIG);
 
     expect(html).toBe('<h1 id="present-yourself">Present yourself</h1>\n<p>I am <strong>next-markdown</strong></p>');
   });
@@ -43,6 +45,7 @@ describe('transform file raw data into props', () => {
     const { frontMatter, markdown, html, mdxSource, tableOfContents } = await transformFileRawData(
       rawdata,
       'md',
+      NEXTMD_CONFIG,
       plugins,
     );
     expect(frontMatter).toEqual(data);
@@ -56,6 +59,7 @@ describe('transform file raw data into props', () => {
     const { frontMatter, markdown, html, mdxSource, tableOfContents } = await transformFileRawData(
       rawdata,
       'mdx',
+      NEXTMD_CONFIG,
       plugins,
     );
     expect(frontMatter).toEqual(data);
