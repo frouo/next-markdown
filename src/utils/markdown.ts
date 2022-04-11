@@ -13,11 +13,11 @@ import { extractDataFromAlt } from './alt';
 import { isMDX } from './fs';
 import { getTableOfContents } from './table-of-contents';
 
-export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string, config: MarkdownPlugins) => {
+export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string, plugins: MarkdownPlugins) => {
   const rawdata = fs.readFileSync(filePath).toString('utf-8');
   const mdx = isMDX(filePath);
 
-  return await transformFileRawData<T>(rawdata, mdx ? 'mdx' : 'md', config, {
+  return await transformFileRawData<T>(rawdata, mdx ? 'mdx' : 'md', plugins, {
     markdownToHtml,
     mdxSerialize: (await import('next-mdx-remote/serialize')).serialize,
     tableOfContents: getTableOfContents,
@@ -27,7 +27,7 @@ export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: stri
 export const transformFileRawData = async <T extends YAMLFrontMatter>(
   rawdata: string,
   type: 'md' | 'mdx',
-  config: MarkdownPlugins,
+  plugins: MarkdownPlugins,
   transformers: {
     markdownToHtml: (content: string, config: MarkdownPlugins) => Promise<string>;
     mdxSerialize: (
@@ -42,13 +42,13 @@ export const transformFileRawData = async <T extends YAMLFrontMatter>(
   return {
     frontMatter,
     markdown: content,
-    html: type === 'md' ? await transformers.markdownToHtml(content, config) : null,
+    html: type === 'md' ? await transformers.markdownToHtml(content, plugins) : null,
     mdxSource:
       type === 'mdx'
         ? await transformers.mdxSerialize(content, {
             mdxOptions: {
-              rehypePlugins: [rehypeVideos, rehypeSlug, ...(config.rehypePlugins || [])],
-              remarkPlugins: config.remarkPlugins,
+              rehypePlugins: [rehypeVideos, rehypeSlug, ...(plugins.rehypePlugins || [])],
+              remarkPlugins: plugins.remarkPlugins,
             },
             parseFrontmatter: false,
           })
@@ -66,19 +66,19 @@ export const extractFrontMatter = <T extends YAMLFrontMatter>(rawdata: string) =
   };
 };
 
-export const markdownToHtml = async (markdown: string, config: MarkdownPlugins) => {
+export const markdownToHtml = async (markdown: string, plugins: MarkdownPlugins) => {
   const processor = unified().use(remarkParse);
 
   // inject custom remark plugins
-  if (config.remarkPlugins) {
-    processor.use(config.remarkPlugins);
+  if (plugins.remarkPlugins) {
+    processor.use(plugins.remarkPlugins);
   }
 
   processor.use(remarkRehype).use(rehypeVideos).use(rehypeSlug);
 
   // inject custom rehype plugins
-  if (config.rehypePlugins) {
-    processor.use(config.rehypePlugins);
+  if (plugins.rehypePlugins) {
+    processor.use(plugins.rehypePlugins);
   }
 
   processor.use(rehypeStringify);
