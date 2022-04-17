@@ -1,20 +1,18 @@
-import { InferGetStaticPropsType } from 'next';
-import NextMarkdown from 'next-markdown';
+import NextMarkdown, { NextMarkdownProps } from 'next-markdown';
 import Head from 'next/head';
 import { MDXRemote } from 'next-mdx-remote';
 import Button from '../components/button';
 
 type MyFrontMatter = { title: string };
-type MyBlogPostFrontMatter = MyFrontMatter & { author: string };
 
-const nextmd = NextMarkdown<MyFrontMatter, MyBlogPostFrontMatter>({
+const nextmd = NextMarkdown({
   pathToContent: './pages-markdown',
 });
 
 export const getStaticProps = nextmd.getStaticProps;
 export const getStaticPaths = nextmd.getStaticPaths;
 
-export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function MyMarkdownPage(props: NextMarkdownProps<MyFrontMatter>) {
   const { frontMatter, html, mdxSource } = props;
 
   return (

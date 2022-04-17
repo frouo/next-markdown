@@ -1,11 +1,9 @@
-import { InferGetStaticPropsType } from 'next';
-import NextMarkdown from 'next-markdown';
+import NextMarkdown, { NextMarkdownProps } from 'next-markdown';
 import Head from 'next/head';
 
 type MyFrontMatter = { title: string };
-type MyBlogPostFrontMatter = MyFrontMatter & { author: string };
 
-const nextmd = NextMarkdown<MyFrontMatter, MyBlogPostFrontMatter>({
+const nextmd = NextMarkdown({
   pathToContent: './',
   contentGitRepo: {
     remoteUrl: 'https://github.com/frouo/next-markdown-demo',
@@ -16,7 +14,7 @@ const nextmd = NextMarkdown<MyFrontMatter, MyBlogPostFrontMatter>({
 export const getStaticProps = nextmd.getStaticProps;
 export const getStaticPaths = nextmd.getStaticPaths;
 
-export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function MyMarkdownPage(props: NextMarkdownProps<MyFrontMatter>) {
   const { html, frontMatter } = props;
 
   return (
@@ -24,7 +22,7 @@ export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof get
       <Head>
         <title>{frontMatter.title}</title>
       </Head>
-      <div dangerouslySetInnerHTML={{ __html: html }} />
+      {html && <div dangerouslySetInnerHTML={{ __html: html }} />}
     </>
   );
 }

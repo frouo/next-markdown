@@ -23,9 +23,8 @@ Use `<MDXRemote />` component to render the given `mdxSource` props
 ```typescript
 # [...nextmd.tsx]
 
-import { InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
-import NextMarkdown from 'next-markdown';
+import NextMarkdown, { NextMarkdownProps } from 'next-markdown';
 import { MDXRemote } from 'next-mdx-remote';
 import Button from '../components/button';
 
@@ -36,7 +35,9 @@ const nextmd = NextMarkdown({
 export const getStaticProps = nextmd.getStaticProps;
 export const getStaticPaths = nextmd.getStaticPaths;
 
-export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
+type FrontMatter = { title: string }
+
+export default function MyMarkdownPage(props: NextMarkdownProps<FrontMatter>) {
   const { frontMatter, mdxSource } = props;
 
   return (

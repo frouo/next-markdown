@@ -1,5 +1,5 @@
 import { resolve, parse, relative } from 'path';
-import { Config, File, YAMLFrontMatter } from './types';
+import { Config, File, NextMarkdownProps } from './types';
 import { pathToContent, flatFiles, generateNextmd } from './utils/fs';
 import { treeContentRepo } from './utils/git';
 import { consoleLogNextmd } from './utils/logger';
@@ -9,11 +9,7 @@ import { readMarkdownFile } from './utils/markdown';
  * @param config The config for the next-markdown module.
  * @returns The next markdown module ready-to-use.
  */
-const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatter extends PageFrontMatter>(
-  config: Config<PageFrontMatter | PostPageFrontMatter>,
-) => {
-  type UserFrontMatter = PageFrontMatter | PostPageFrontMatter;
-
+const NextMarkdown = (config: Config) => {
   const isContentFetchedFromRemote = config.contentGitRepo !== undefined;
   const finalPathToContent = pathToContent(config.pathToContent, isContentFetchedFromRemote);
   const relativeToAbsolute = (filePath: string) => resolve(finalPathToContent, filePath);
@@ -22,7 +18,7 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
   const includeToApply = async (file: File) =>
     config.include
       ? (async (fn: typeof config.include) => {
-          const { frontMatter } = await readMarkdownFile<UserFrontMatter>(relativeToAbsolute(file.path), config);
+          const { frontMatter } = await readMarkdownFile(relativeToAbsolute(file.path), config);
           return fn(file, frontMatter);
         })(config.include)
       : file.name !== 'README.md' && file.name.startsWith('_') === false;
@@ -52,7 +48,7 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
       };
     },
 
-    getStaticProps: async (context: { params?: { nextmd: string[] } }) => {
+    getStaticProps: async (context: { params?: { nextmd: string[] } }): Promise<{ props: NextMarkdownProps }> => {
       const tree = await treeContentRepo(relativeToAbsolute('.'), config.debug ?? false, config.contentGitRepo);
       const allFiles = flatFiles(tree);
 
@@ -70,7 +66,7 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
         throw Error(`Could not find markdown file at path "${nextmd.join('/')}"`);
       }
 
-      const pageData = await readMarkdownFile<PageFrontMatter>(relativeToAbsolute(file.path), config);
+      const pageData = await readMarkdownFile(relativeToAbsolute(file.path), config);
 
       const filesInSameDir = allFiles
         .filter((e) => e !== file) // remove itself
@@ -82,7 +78,7 @@ const NextMarkdown = <PageFrontMatter extends YAMLFrontMatter, PostPageFrontMatt
 
       const filesData = await Promise.all(
         filesWanted.map(async (e) => ({
-          ...(await readMarkdownFile<PostPageFrontMatter>(relativeToAbsolute(e.path), config)),
+          ...(await readMarkdownFile(relativeToAbsolute(e.path), config)),
           nextmd: generateNextmd(absoluteToRelative(e.path)),
         })),
       );

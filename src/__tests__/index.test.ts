@@ -9,7 +9,7 @@ describe('next-markdown', () => {
   });
 
   test('index exports Config type', () => {
-    const config: Config<{}> = { pathToContent: 'test/path' };
+    const config: Config = { pathToContent: 'test/path' };
     expect(config).toBeDefined();
   });
 });

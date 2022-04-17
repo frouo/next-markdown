@@ -1,7 +1,7 @@
-import { Config, TableOfContents, YAMLFrontMatter } from '../types';
+import { Config, TableOfContents } from '../types';
 import { extractFrontMatter, markdownToHtml, transformFileRawData } from '../utils/markdown';
 
-const NEXTMD_CONFIG: Config<YAMLFrontMatter> = { pathToContent: './' };
+const NEXTMD_CONFIG: Config = { pathToContent: './' };
 
 describe('extract front matter', () => {
   test('extracts front matter from md file content', () => {

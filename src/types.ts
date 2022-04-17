@@ -2,6 +2,7 @@
 // Types
 // -----------
 
+import { MDXRemoteSerializeResult } from 'next-mdx-remote';
 import { PluggableList } from 'unified';
 
 export type MarkdownPlugins = {
@@ -16,7 +17,7 @@ export type MarkdownPlugins = {
   rehypePlugins?: PluggableList;
 };
 
-export type Config<T extends YAMLFrontMatter> = MarkdownPlugins & {
+export type Config = MarkdownPlugins & {
   /**
    * The place where to find your markdown files and folders.
    *
@@ -44,7 +45,7 @@ export type Config<T extends YAMLFrontMatter> = MarkdownPlugins & {
   /**
    * A function that tells `next-markdown` to generate a route for the given file. By default `next-markdown` ignores "README.md" files or files name starting with an underscore (eg. `_draft.md`).
    */
-  include?: (file: File, frontMatter: T) => boolean;
+  include?: <T extends YAMLFrontMatter = {}>(file: File, frontMatter: T) => boolean;
 
   /**
    * Get more logs. Make sure it is `false` for production.
@@ -77,3 +78,19 @@ export interface TableOfContentItem {
 }
 
 export type TableOfContents = TableOfContentItem[];
+
+export type NextMarkdownProps<T extends YAMLFrontMatter = {}, U extends YAMLFrontMatter = {}> = {
+  nextmd: string[];
+  frontMatter: T;
+  markdown: string;
+  html: string | null;
+  mdxSource: MDXRemoteSerializeResult<Record<string, unknown>> | null;
+  tableOfContents: TableOfContents;
+  files:
+    | {
+        nextmd: string[];
+        frontMatter: U;
+        markdown: string;
+      }[]
+    | null;
+};
