@@ -1,6 +1,6 @@
-import { join, parse } from 'path';
+import { join, parse, resolve } from 'path';
 import { Dir, File, TreeObject } from '../types';
-import { pathToContent, exclude, generateNextmd, isMDX, flatFiles } from '../utils/fs';
+import { pathToContent, exclude, generateNextmd, isMDX, flatFiles, treeSync } from '../utils/fs';
 
 describe('nextmd', () => {
   test('generate nextmd for "index" at the root', () => {
@@ -169,4 +169,9 @@ describe('flat files', () => {
     const folderDocs = createADir('docs', [folderSubfolder]);
     expect(flatFiles([folderDocs])).toMatchSnapshot();
   });
+});
+
+test('Tree parsing', () => {
+  const dirFileSystem = resolve(__dirname, '__filesystem__/');
+  expect(treeSync(dirFileSystem)).toMatchSnapshot();
 });

@@ -1,5 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Tree parsing 1`] = `
+Array [
+  Object {
+    "name": "b.md",
+    "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/b.md",
+    "type": "file",
+  },
+  Object {
+    "children": Array [
+      Object {
+        "name": "c.md",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/c.md",
+        "type": "file",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "name": "e.mdx",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/to/e.mdx",
+            "type": "file",
+          },
+        ],
+        "name": "to",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/to",
+        "type": "dir",
+      },
+    ],
+    "name": "path",
+    "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path",
+    "type": "dir",
+  },
+]
+`;
+
 exports[`flat files file and dirs with nested files 1`] = `
 Array [
   Object {
