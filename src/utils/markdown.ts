@@ -1,4 +1,3 @@
-import fs from 'fs';
 import matter from 'gray-matter';
 import { Root } from 'mdast';
 import { MDXRemoteSerializeResult, SerializeOptions } from 'next-mdx-remote/dist/types';
@@ -10,11 +9,11 @@ import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 import { MarkdownPlugins, TableOfContents, YAMLFrontMatter } from '../types';
 import { extractDataFromAlt } from './alt';
-import { isMDX } from './fs';
+import { isMDX, readFileSyncUTF8 } from './fs';
 import { getTableOfContents } from './table-of-contents';
 
 export const readMarkdownFile = async (filePath: string, plugins: MarkdownPlugins) => {
-  const rawdata = fs.readFileSync(filePath).toString('utf-8');
+  const rawdata = readFileSyncUTF8(filePath);
   const mdx = isMDX(filePath);
 
   return await transformFileRawData(rawdata, mdx ? 'mdx' : 'md', plugins, {

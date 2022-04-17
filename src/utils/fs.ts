@@ -79,3 +79,5 @@ export const getPostFilesFromNextmd = async (files: File[], nextmd: string[]) =>
   files.filter((e) => parse(e.path).dir === nextmd.join('/'));
 
 export const isMDX = (filePath: string) => filePath.endsWith('.mdx');
+
+export const readFileSyncUTF8 = (filePath: string) => fs.readFileSync(filePath).toString('utf-8');
