@@ -143,14 +143,14 @@ describe('flat files', () => {
     const dir1 = createADir('docs', []);
     const dir2 = createADir('blog', []);
     const tree: Dir[] = [dir1, dir2];
-    expect(JSON.stringify(flatFiles(tree))).toBe(`[]`);
+    expect(flatFiles(tree)).toEqual([]);
   });
 
   test('only files', () => {
     const file1 = createAFile('file1', './');
     const file2 = createAFile('file2', './');
     const tree: File[] = [file1, file2];
-    expect(JSON.stringify(flatFiles(tree))).toBe(`[${JSON.stringify(file1)},${JSON.stringify(file2)}]`);
+    expect(flatFiles(tree)).toMatchSnapshot();
   });
 
   test('file and dirs with nested files', () => {
@@ -160,17 +160,13 @@ describe('flat files', () => {
     const folderDocs = createADir('docs', [fileDoc1, fileDoc2]);
     const fileBlog1 = createAFile('file1', './blog');
     const folderBlog = createADir('blog', [fileBlog1]);
-    expect(JSON.stringify(flatFiles([fileAbout, folderDocs, folderBlog]))).toBe(
-      `[${JSON.stringify(fileAbout)},${JSON.stringify(fileDoc1)},${JSON.stringify(fileDoc2)},${JSON.stringify(
-        fileBlog1,
-      )}]`,
-    );
+    expect(flatFiles([fileAbout, folderDocs, folderBlog])).toMatchSnapshot();
   });
 
   test('file in a subfolder', () => {
     const fileDoc1 = createAFile('file1', './docs/subfolder');
     const folderSubfolder = createADir('./docs/subfolder', [fileDoc1]);
     const folderDocs = createADir('docs', [folderSubfolder]);
-    expect(JSON.stringify(flatFiles([folderDocs]))).toBe(`[${JSON.stringify(fileDoc1)}]`);
+    expect(flatFiles([folderDocs])).toMatchSnapshot();
   });
 });

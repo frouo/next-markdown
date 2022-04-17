@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`flat files file and dirs with nested files 1`] = `
+Array [
+  Object {
+    "name": "about",
+    "path": "about",
+    "type": "file",
+  },
+  Object {
+    "name": "file1",
+    "path": "docs/file1",
+    "type": "file",
+  },
+  Object {
+    "name": "file2",
+    "path": "docs/file2",
+    "type": "file",
+  },
+  Object {
+    "name": "file1",
+    "path": "blog/file1",
+    "type": "file",
+  },
+]
+`;
+
+exports[`flat files file in a subfolder 1`] = `
+Array [
+  Object {
+    "name": "file1",
+    "path": "docs/subfolder/file1",
+    "type": "file",
+  },
+]
+`;
+
+exports[`flat files only files 1`] = `
+Array [
+  Object {
+    "name": "file1",
+    "path": "file1",
+    "type": "file",
+  },
+  Object {
+    "name": "file2",
+    "path": "file2",
+    "type": "file",
+  },
+]
+`;
