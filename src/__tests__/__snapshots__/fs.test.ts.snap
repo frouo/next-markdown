@@ -3,9 +3,41 @@
 exports[`Tree parsing 1`] = `
 Array [
   Object {
+    "name": "about.md",
+    "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/about.md",
+    "type": "file",
+  },
+  Object {
     "name": "b.md",
     "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/b.md",
     "type": "file",
+  },
+  Object {
+    "children": Array [
+      Object {
+        "name": "index.md",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/blog/index.md",
+        "type": "file",
+      },
+      Object {
+        "name": "post-1.md",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/blog/post-1.md",
+        "type": "file",
+      },
+      Object {
+        "name": "post-2.mdx",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/blog/post-2.mdx",
+        "type": "file",
+      },
+      Object {
+        "name": "post-3.md",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/blog/post-3.md",
+        "type": "file",
+      },
+    ],
+    "name": "blog",
+    "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/blog",
+    "type": "dir",
   },
   Object {
     "children": Array [
