@@ -56,13 +56,13 @@ const NextMarkdown = (config: Config) => {
     },
 
     getStaticProps: async (context: { params?: { nextmd: string[] } }): Promise<{ props: NextMarkdownProps }> => {
-      const allFiles = await getAllFiles();
-
       const nextmd = context.params?.nextmd;
 
       if (nextmd === undefined) {
         throw Error('Could not find params "nextmd". Do you name the file `[...nextmd].tsx` or `[...nextmd].jsx`?');
       }
+
+      const allFiles = await getAllFiles();
 
       const file = allFiles.find(
         (e) => JSON.stringify(nextmd) === JSON.stringify(generateNextmd(absoluteToRelative(e.path))),
