@@ -29,6 +29,45 @@ const NextMarkdown = (config: Config) => {
     return flatFiles(tree);
   };
 
+  const getStaticPropsForNextmd = async (nextmd: string[]): Promise<{ props: NextMarkdownProps }> => {
+    const allFiles = await getAllFiles();
+
+    const file = allFiles.find(
+      (e) => JSON.stringify(nextmd) === JSON.stringify(generateNextmd(absoluteToRelative(e.path))),
+    );
+
+    if (file === undefined) {
+      throw Error(`Could not find markdown file at path "${nextmd.join('/')}"`);
+    }
+
+    const pageData = await readMarkdownFile(relativeToAbsolute(file.path), config);
+
+    const filesInSameDir = allFiles
+      .filter((e) => e !== file) // remove itself
+      .filter((e) => JSON.stringify(nextmd) === JSON.stringify(absoluteToRelative(parse(e.path).dir).split('/'))); // get files in the same directory
+
+    const filesData: NextMarkdownFile[] = (
+      await Promise.all(filesInSameDir.map(async (e) => ({ ...e, isIncluded: await includeToApply(e) })))
+    )
+      .filter((e) => e.isIncluded)
+      .map((e) => {
+        const { frontMatter, content } = extractFrontMatter(readFileSyncUTF8(relativeToAbsolute(e.path)));
+        return {
+          nextmd: generateNextmd(absoluteToRelative(e.path)),
+          frontMatter,
+          markdown: content,
+        };
+      });
+
+    return {
+      props: {
+        ...pageData,
+        nextmd,
+        files: filesData,
+      },
+    };
+  };
+
   return {
     getStaticPaths: async () => {
       const allFiles = await getAllFiles();
@@ -62,42 +101,7 @@ const NextMarkdown = (config: Config) => {
         throw Error('Could not find params "nextmd". Do you name the file `[...nextmd].tsx` or `[...nextmd].jsx`?');
       }
 
-      const allFiles = await getAllFiles();
-
-      const file = allFiles.find(
-        (e) => JSON.stringify(nextmd) === JSON.stringify(generateNextmd(absoluteToRelative(e.path))),
-      );
-
-      if (file === undefined) {
-        throw Error(`Could not find markdown file at path "${nextmd.join('/')}"`);
-      }
-
-      const pageData = await readMarkdownFile(relativeToAbsolute(file.path), config);
-
-      const filesInSameDir = allFiles
-        .filter((e) => e !== file) // remove itself
-        .filter((e) => JSON.stringify(nextmd) === JSON.stringify(absoluteToRelative(parse(e.path).dir).split('/'))); // get files in the same directory
-
-      const filesData: NextMarkdownFile[] = (
-        await Promise.all(filesInSameDir.map(async (e) => ({ ...e, isIncluded: await includeToApply(e) })))
-      )
-        .filter((e) => e.isIncluded)
-        .map((e) => {
-          const { frontMatter, content } = extractFrontMatter(readFileSyncUTF8(relativeToAbsolute(e.path)));
-          return {
-            nextmd: generateNextmd(absoluteToRelative(e.path)),
-            frontMatter,
-            markdown: content,
-          };
-        });
-
-      return {
-        props: {
-          ...pageData,
-          nextmd,
-          files: filesData,
-        },
-      };
+      return getStaticPropsForNextmd(nextmd);
     },
   };
 };
