@@ -42,6 +42,11 @@ Array [
   Object {
     "children": Array [
       Object {
+        "name": "_draft.md",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/_draft.md",
+        "type": "file",
+      },
+      Object {
         "name": "c.md",
         "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/c.md",
         "type": "file",
@@ -49,8 +54,18 @@ Array [
       Object {
         "children": Array [
           Object {
+            "name": "_index.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/to/_index.md",
+            "type": "file",
+          },
+          Object {
             "name": "e.mdx",
             "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/to/e.mdx",
+            "type": "file",
+          },
+          Object {
+            "name": "f.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/to/f.md",
             "type": "file",
           },
         ],

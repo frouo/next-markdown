@@ -103,6 +103,8 @@ const NextMarkdown = (config: Config) => {
 
       return getStaticPropsForNextmd(nextmd);
     },
+
+    getStaticPropsForNextmd,
   };
 };
 
