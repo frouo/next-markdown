@@ -24,10 +24,14 @@ const NextMarkdown = (config: Config) => {
         })(config.include)
       : file.name !== 'README.md' && file.name.startsWith('_') === false;
 
+  const getAllFiles = async () => {
+    const tree = await treeContentRepo(relativeToAbsolute('.'), config.debug ?? false, config.contentGitRepo);
+    return flatFiles(tree);
+  };
+
   return {
     getStaticPaths: async () => {
-      const tree = await treeContentRepo(relativeToAbsolute('.'), config.debug ?? false, config.contentGitRepo);
-      const allFiles = flatFiles(tree);
+      const allFiles = await getAllFiles();
       const allFilesWithInclude = await Promise.all(
         allFiles.map(async (e) => ({
           ...e,
@@ -50,8 +54,7 @@ const NextMarkdown = (config: Config) => {
     },
 
     getStaticProps: async (context: { params?: { nextmd: string[] } }): Promise<{ props: NextMarkdownProps }> => {
-      const tree = await treeContentRepo(relativeToAbsolute('.'), config.debug ?? false, config.contentGitRepo);
-      const allFiles = flatFiles(tree);
+      const allFiles = await getAllFiles();
 
       const nextmd = context.params?.nextmd;
 
