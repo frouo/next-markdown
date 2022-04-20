@@ -35,13 +35,15 @@ const NextMarkdown = (config: Config) => {
       const allFilesWithInclude = await Promise.all(
         allFiles.map(async (e) => ({
           ...e,
-          include: await includeToApply(e),
+          isIncluded: await includeToApply(e),
         })),
       );
+
       if (config.debug) {
         consoleLogNextmd('getStaticPaths:', JSON.stringify(allFilesWithInclude));
       }
-      const files = allFilesWithInclude.filter((e) => e.include);
+
+      const files = allFilesWithInclude.filter((e) => e.isIncluded);
 
       return {
         paths: files.map((e) => ({
@@ -77,8 +79,8 @@ const NextMarkdown = (config: Config) => {
         .filter((e) => JSON.stringify(nextmd) === JSON.stringify(absoluteToRelative(parse(e.path).dir).split('/'))); // get files in the same directory
 
       const filesWanted = (
-        await Promise.all(filesInSameDir.map(async (e) => ({ ...e, include: await includeToApply(e) })))
-      ).filter((e) => e.include);
+        await Promise.all(filesInSameDir.map(async (e) => ({ ...e, isIncluded: await includeToApply(e) })))
+      ).filter((e) => e.isIncluded);
 
       const filesData = await Promise.all(
         filesWanted.map(async (e) => ({
