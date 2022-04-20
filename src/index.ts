@@ -1,9 +1,9 @@
 import { resolve, parse, relative } from 'path';
 import { Config, File, NextMarkdownProps } from './types';
-import { pathToContent, flatFiles, generateNextmd } from './utils/fs';
+import { pathToContent, flatFiles, generateNextmd, readFileSyncUTF8 } from './utils/fs';
 import { treeContentRepo } from './utils/git';
 import { consoleLogNextmd } from './utils/logger';
-import { readMarkdownFile } from './utils/markdown';
+import { extractFrontMatter, readMarkdownFile } from './utils/markdown';
 
 /**
  * @param config The config for the next-markdown module.
@@ -18,7 +18,8 @@ const NextMarkdown = (config: Config) => {
   const includeToApply = async (file: File) =>
     config.include
       ? (async (fn: typeof config.include) => {
-          const { frontMatter } = await readMarkdownFile(relativeToAbsolute(file.path), config);
+          const rawdata = readFileSyncUTF8(relativeToAbsolute(file.path));
+          const { frontMatter } = extractFrontMatter(rawdata);
           return fn(file, frontMatter);
         })(config.include)
       : file.name !== 'README.md' && file.name.startsWith('_') === false;
