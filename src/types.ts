@@ -79,18 +79,15 @@ export interface TableOfContentItem {
 
 export type TableOfContents = TableOfContentItem[];
 
-export type NextMarkdownProps<T extends YAMLFrontMatter = {}, U extends YAMLFrontMatter = {}> = {
-  nextmd: string[];
-  frontMatter: T;
-  markdown: string;
+export type NextMarkdownProps<T extends YAMLFrontMatter = {}, U extends YAMLFrontMatter = {}> = NextMarkdownFile<T> & {
   html: string | null;
   mdxSource: MDXRemoteSerializeResult<Record<string, unknown>> | null;
   tableOfContents: TableOfContents;
-  files:
-    | {
-        nextmd: string[];
-        frontMatter: U;
-        markdown: string;
-      }[]
-    | null;
+  files: NextMarkdownFile<U>[] | null;
+};
+
+export type NextMarkdownFile<U extends YAMLFrontMatter = {}> = {
+  nextmd: string[];
+  frontMatter: U;
+  markdown: string;
 };

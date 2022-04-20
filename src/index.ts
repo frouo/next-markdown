@@ -1,5 +1,5 @@
 import { resolve, parse, relative } from 'path';
-import { Config, File, NextMarkdownProps } from './types';
+import { Config, File, NextMarkdownFile, NextMarkdownProps } from './types';
 import { pathToContent, flatFiles, generateNextmd, readFileSyncUTF8 } from './utils/fs';
 import { treeContentRepo } from './utils/git';
 import { consoleLogNextmd } from './utils/logger';
@@ -78,16 +78,18 @@ const NextMarkdown = (config: Config) => {
         .filter((e) => e !== file) // remove itself
         .filter((e) => JSON.stringify(nextmd) === JSON.stringify(absoluteToRelative(parse(e.path).dir).split('/'))); // get files in the same directory
 
-      const filesWanted = (
+      const filesData: NextMarkdownFile[] = (
         await Promise.all(filesInSameDir.map(async (e) => ({ ...e, isIncluded: await includeToApply(e) })))
-      ).filter((e) => e.isIncluded);
-
-      const filesData = await Promise.all(
-        filesWanted.map(async (e) => ({
-          ...(await readMarkdownFile(relativeToAbsolute(e.path), config)),
-          nextmd: generateNextmd(absoluteToRelative(e.path)),
-        })),
-      );
+      )
+        .filter((e) => e.isIncluded)
+        .map((e) => {
+          const { frontMatter, content } = extractFrontMatter(readFileSyncUTF8(relativeToAbsolute(e.path)));
+          return {
+            nextmd: generateNextmd(absoluteToRelative(e.path)),
+            frontMatter,
+            markdown: content,
+          };
+        });
 
       return {
         props: {
