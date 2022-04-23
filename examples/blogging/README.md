@@ -36,20 +36,25 @@ props: {
 }
 ```
 
-## Ignored Files
+## Create Drafts, Publish or Unpublish
 
-By default `next-markdown` ignores:
+By default `next-markdown` will create a path for every files found, **unless** the file name starts with an underscore `_`, eg: `_draft.md`.
 
-- files whose name starts with an underscore `_`, eg: `_draft.md`
-- `README.md` files
+This simple next-markdown rule gives you the flexibility to simply create drafts, or (un)publish a route.
+
+Example:
 
 ```
+├ _about.md   ................... ➡️ ❌ 404, because file name starts with "_"
 ├ blog/
   ├ index.md   .................. ➡️ /blog
-  ├ _draft.md  .................. ➡️ ❌ because file name starts with "_"
+  ├ hello.md   .................. ➡️ /blog/hello
+  ├ _draft.md   ................. ➡️ ❌ 404, because file name starts with "_"
+├ _sandbox/
+  ├ hello.md   .................. ➡️ ❌ 404, because the folder "_sandbox" starts with an "_"
+  ├ world.md   .................. ➡️ ❌ 404, because the folder "_sandbox" starts with an "_"
 ```
 
-This behavior can be overriden by defining your own `include` in the initializer. For example:
 
 ```javascript
 {
@@ -72,6 +77,10 @@ For that reason, `next-markdown` automatically ignores the first occurence of "`
   ├ [doc-1] get-started.md   .... ➡️ /docs/get-started
   ├ [doc-2] features.md   ....... ➡️ /docs/features
   ├ [doc-3] contribute.md   ..... ➡️ /docs/contribute
+  ├ [doc-4] _draft.md   ......... ➡️ ❌ 404, because file name starts with "_" (after `[...] `)
+├ [legal] terms.md   ............ ➡️ /terms
+├ [legal] privacy.md   .......... ➡️ /privacy
+├ about.md   .................... ➡️ /about
 ```
 
 When rendering `index.md`, next-markdown will create and pass the following props (`/docs` route):

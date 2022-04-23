@@ -115,6 +115,7 @@ See the [example](./examples/dynamic-routes/).
 
 - list all files
 - easy to calculate the estimated reading time
+- write draft or unpublish a post by simply prefixing the file name with `_` (underscore, eg. `_draft.md`)
 - etc.
 
 See the [example](./examples/blogging/).
