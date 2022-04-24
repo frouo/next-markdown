@@ -1,6 +1,6 @@
 import { join, parse, resolve } from 'path';
 import { Dir, File, TreeObject } from '../types';
-import { pathToContent, exclude, isMDX, flatFiles, treeSync } from '../utils/fs';
+import { pathToContent, exclude, isMDX, flatFiles, treeSync, isDraft } from '../utils/fs';
 
 describe('tree object to exclude from generating a path', () => {
   const aFileWithExt = (extension: string): TreeObject => ({
@@ -123,4 +123,18 @@ describe('flat files', () => {
 test('Tree parsing', () => {
   const dirFileSystem = resolve(__dirname, '__filesystem__/');
   expect(treeSync(dirFileSystem)).toMatchSnapshot();
+});
+
+describe('is draft', () => {
+  test('without "_"', () => {
+    expect(isDraft('path/to/file.abc')).toBeFalsy();
+  });
+
+  test('with file name starting with "_"', () => {
+    expect(isDraft('path/to/_file.abc')).toBeTruthy();
+  });
+
+  test('with path starting with "_"', () => {
+    expect(isDraft('path/_to/file.abc')).toBeTruthy();
+  });
 });
