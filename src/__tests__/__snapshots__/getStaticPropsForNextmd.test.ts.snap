@@ -3,7 +3,6 @@
 exports[`/about 1`] = `
 Object {
   "props": Object {
-    "files": Array [],
     "frontMatter": Object {},
     "html": "",
     "markdown": "",
@@ -11,6 +10,7 @@ Object {
     "nextmd": Array [
       "about",
     ],
+    "subPaths": Array [],
     "tableOfContents": Array [],
   },
 }
@@ -19,7 +19,14 @@ Object {
 exports[`/blog 1`] = `
 Object {
   "props": Object {
-    "files": Array [
+    "frontMatter": Object {},
+    "html": "",
+    "markdown": "",
+    "mdxSource": null,
+    "nextmd": Array [
+      "blog",
+    ],
+    "subPaths": Array [
       Object {
         "frontMatter": Object {},
         "markdown": "",
@@ -45,12 +52,77 @@ Object {
         ],
       },
     ],
+    "tableOfContents": Array [],
+  },
+}
+`;
+
+exports[`/docs/api 1`] = `
+Object {
+  "props": Object {
     "frontMatter": Object {},
     "html": "",
     "markdown": "",
     "mdxSource": null,
     "nextmd": Array [
-      "blog",
+      "docs",
+      "api",
+    ],
+    "subPaths": Array [
+      Object {
+        "frontMatter": Object {},
+        "markdown": "",
+        "nextmd": Array [
+          "docs",
+          "api",
+          "get-static-paths",
+        ],
+      },
+      Object {
+        "frontMatter": Object {},
+        "markdown": "",
+        "nextmd": Array [
+          "docs",
+          "api",
+          "get-static-props",
+        ],
+      },
+    ],
+    "tableOfContents": Array [],
+  },
+}
+`;
+
+exports[`/docs/getting-started 1`] = `
+Object {
+  "props": Object {
+    "frontMatter": Object {},
+    "html": "",
+    "markdown": "",
+    "mdxSource": null,
+    "nextmd": Array [
+      "docs",
+      "getting-started",
+    ],
+    "subPaths": Array [
+      Object {
+        "frontMatter": Object {},
+        "markdown": "",
+        "nextmd": Array [
+          "docs",
+          "getting-started",
+          "install",
+        ],
+      },
+      Object {
+        "frontMatter": Object {},
+        "markdown": "",
+        "nextmd": Array [
+          "docs",
+          "getting-started",
+          "setup",
+        ],
+      },
     ],
     "tableOfContents": Array [],
   },
@@ -60,7 +132,6 @@ Object {
 exports[`/path/to/e 1`] = `
 Object {
   "props": Object {
-    "files": Array [],
     "frontMatter": Object {},
     "html": null,
     "markdown": "",
@@ -70,6 +141,7 @@ Object {
       "to",
       "e",
     ],
+    "subPaths": Array [],
     "tableOfContents": Array [],
   },
 }

@@ -111,11 +111,11 @@ See the [example](./examples/dynamic-routes/).
 
 ### Blog Aware
 
-`next-markdown` is blog-aware, docs-aware, etc.:
+`next-markdown` is blog-aware:
 
-- list all files
-- easy to calculate the estimated reading time
+- list all posts
 - write draft or unpublish a post by simply prefixing the file name with `_` (underscore, eg. `_draft.md`)
+- calculate the estimated reading time easily
 - etc.
 
 See the [example](./examples/blogging/).
@@ -157,12 +157,6 @@ See the [example](./examples/custom-remark-rehype-plugins/).
 For many good reasons you may want to host your content in another GIT repo.
 
 See the [example](./examples/remote-content/).
-
-### Caveat
-
-By default, `next-markdown` ignores `README.md` files and files whose name starts with an underscore (eg. `_draft.md`).
-
-This can be overriden by implementing the `include` function in the config object.
 
 ## Examples 🖥
 

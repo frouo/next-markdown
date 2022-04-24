@@ -19,3 +19,17 @@ test('an unknown path', async () => {
     Error('Could not find markdown file at path "empty"'),
   );
 });
+
+test('/docs/getting-started', async () => {
+  expect(await nextMD.getStaticPropsForNextmd(['docs', 'getting-started'])).toMatchSnapshot();
+});
+
+test('/docs/api', async () => {
+  expect(await nextMD.getStaticPropsForNextmd(['docs', 'api'])).toMatchSnapshot();
+});
+
+test('/docs/examples (no index.md)', async () => {
+  await expect(nextMD.getStaticPropsForNextmd(['docs', 'examples'])).rejects.toThrowError(
+    Error('Could not find markdown file at path "docs/examples"'),
+  );
+});

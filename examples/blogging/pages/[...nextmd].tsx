@@ -25,7 +25,7 @@ const TableOfContentItem = (item: TableOfContentItem) => {
 };
 
 export default function MyMarkdownPage(props: NextMarkdownProps<MyFrontMatter, MyBlogPostFrontMatter>) {
-  const { html, frontMatter, files, tableOfContents } = props;
+  const { html, frontMatter, subPaths, tableOfContents } = props;
 
   return (
     <>
@@ -43,9 +43,9 @@ export default function MyMarkdownPage(props: NextMarkdownProps<MyFrontMatter, M
         )}
         <hr />
         {html && <div dangerouslySetInnerHTML={{ __html: html }} />}
-        {files && (
+        {subPaths && (
           <ul>
-            {files
+            {subPaths
               .sort((a, b) => b.frontMatter.date.localeCompare(a.frontMatter.date)) // sort by date
               .map((post, index) => (
                 <li key={index}>

@@ -52,6 +52,77 @@ Object {
     Object {
       "params": Object {
         "nextmd": Array [
+          "docs",
+          "getting-started",
+          "install",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "getting-started",
+          "setup",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "getting-started",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "api",
+          "get-static-paths",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "api",
+          "get-static-props",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "examples",
+          "dynamic-routes",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "examples",
+          "blog",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "examples",
+          "mdx-support",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
           "path",
           "c",
         ],

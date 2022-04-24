@@ -1,23 +1,21 @@
 # Blogging
 
-`next-markdown` is blog-aware. Or docs-aware.
+`next-markdown` is blog-aware.
 
-## All Files Listed
+It automatically lists all the files within the same directory in the `props` of the rendered _index.md_.
 
-`next-markdown` will automatically list all the files in a directory in the props `files` when `index.md` is rendered.
-
-### Example
+Example:
 
 ```
 ├ blog/
-  ├ index.md   .................. ➡️ /blog
-  ├ hello.md   .................. ➡️ /blog/hello
-  ├ world.md   .................. ➡️ /blog/world
+  ├ index.md   .................. ➡️ http://localhost:3000/blog
+  ├ hello.md   .................. ➡️ http://localhost:3000/blog/hello
+  ├ world.md   .................. ➡️ http://localhost:3000/blog/world
 ```
 
-When rendering `index.md`, next-markdown will create and pass the following props (`/blog` route):
+When rendering `index.md` (= `/blog` route), next-markdown creates the following props:
 
-```json
+```js
 props: {
   nextmd: ["blog"],
   html: ...,
@@ -55,11 +53,16 @@ Example:
   ├ world.md   .................. ➡️ ❌ 404, because the folder "_sandbox" starts with an "_"
 ```
 
+## Exclude md/mdx files
+
+By default next-markdown will parse every `md` and `mdx` files found excluding `README.md`.
+
+Example:
 
 ```javascript
 {
-  include: (file, frontMatter) => file.name !== 'README.md' && frontMatter.publish === true;
-  // 👆 warning, with this example, ALL your md files must now have a boolean `publish` in its front matter.
+  filterFile: (file: File, frontMatter: MyFrontMatter) => frontMatter.publish === true;
+  // 👆 warning, in this example, only files which front matter includes the `publish: true` statement will be rendered.
 }
 ```
 
@@ -69,7 +72,7 @@ You might want to classify your files in your directory.
 
 For that reason, `next-markdown` automatically ignores the first occurence of "`[text] `" in the markdown file name when creating its path.
 
-### Example
+Example:
 
 ```
 ├ docs/
@@ -83,14 +86,14 @@ For that reason, `next-markdown` automatically ignores the first occurence of "`
 ├ about.md   .................... ➡️ /about
 ```
 
-When rendering `index.md`, next-markdown will create and pass the following props (`/docs` route):
+When rendering `index.md` (= `/docs` route), next-markdown creates the following props:
 
-```json
+```js
 props: {
   nextmd: ["docs"],
   html: ...,
   frontMatter: { ... },
-  files: [
+  subPaths: [
     {
       nextmd: ["docs", "get-started"],
       frontMatter: { ... },
