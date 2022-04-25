@@ -120,6 +120,12 @@ See the [example](./examples/dynamic-routes/).
 
 See the [example](./examples/blogging/).
 
+### Documentation
+
+`next-markdown` lets you build a documentation.
+
+See the [example](./examples/documentation/).
+
 ### Table of Contents
 
 For each page you'll receive the Table of Contents based on headings in your markdown.
