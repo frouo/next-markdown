@@ -2,7 +2,7 @@
 
 `next-markdown` is blog-aware.
 
-It automatically lists all the files within the same directory in the `props` of the rendered _index.md_.
+It automatically lists all available paths adjacent to /blog in the `props` of the rendered _index.md_.
 
 Example:
 
@@ -20,7 +20,7 @@ props: {
   nextmd: ["blog"],
   html: ...,
   frontMatter: { ... },
-  files: [
+  subPaths: [
     {
       nextmd: ["blog", "hello"],
       frontMatter: { ... },
@@ -115,6 +115,7 @@ props: {
 
 ```shell
 git clone https://github.com/frouo/next-markdown.git
+
 cd next-markdown
 npm install
 npm run build

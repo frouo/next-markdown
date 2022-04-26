@@ -8,6 +8,4 @@ title: 'Draft'
 
 That's because the file name starts with an underscore.
 
-Indeed, by default, `next-markdown` ignores files whose name is `README.md` or starts with an underscore (`_`).
-
-You can override this behavior by defining your own `include: (file, frontMatter, html) => boolean` function.
+By design, `next-markdown` will NOT create a path if the file (or folder) name starts with an undescore (`_`).

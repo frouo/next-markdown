@@ -16,7 +16,7 @@ const nextmd = NextMarkdown({ pathToContent: './pages-markdown' });
 export const getStaticPaths = nextmd.getStaticPaths;
 export const getStaticProps = nextmd.getStaticProps;
 
-export default function MarkdownPage({ frontMatter, html, files }) {
+export default function MarkdownPage({ frontMatter, html }) {
   return <div dangerouslySetInnerHTML={{ __html: html }} />; // 👈 design your own layout 🧑‍🎨
 }
 ```

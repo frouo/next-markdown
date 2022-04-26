@@ -40,6 +40,7 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ nextmd: st
 
 ```shell
 git clone https://github.com/frouo/next-markdown.git
+
 cd next-markdown
 npm install
 npm run build
