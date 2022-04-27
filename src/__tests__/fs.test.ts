@@ -1,57 +1,6 @@
 import { join, parse, resolve } from 'path';
 import { Dir, File, TreeObject } from '../types';
-import { pathToContent, exclude, generateNextmd, isMDX, flatFiles, treeSync } from '../utils/fs';
-
-describe('nextmd', () => {
-  test('generate nextmd for "index" at the root', () => {
-    expect(generateNextmd('index.abc')).toEqual([]);
-  });
-
-  test('generate nextmd for a nested index file"', () => {
-    expect(generateNextmd('path/index.abc')).toEqual(['path']);
-  });
-
-  test('generate nextmd for a nested file', () => {
-    expect(generateNextmd('path/hello.abc')).toEqual(['path', 'hello']);
-  });
-
-  test('generate nextmd for a very nested file', () => {
-    expect(generateNextmd('path/to/a/file/hello.abc')).toEqual(['path', 'to', 'a', 'file', 'hello']);
-  });
-
-  test('generate nextmd for a file starting with "_"', () => {
-    // indeed, the fact to exclude file starting with "_" is not the responsibility of this function.
-    expect(generateNextmd('_hello.abc')).toEqual(['_hello']);
-  });
-
-  test('exclude brackets at the beginning of the file name', () => {
-    expect(generateNextmd('[doc1]hello.abc')).toEqual(['hello']);
-  });
-
-  test('exclude brackets in the file name', () => {
-    expect(generateNextmd('_[doc1]hello.abc')).toEqual(['_hello']);
-  });
-
-  test('exclude only the first brackets occurence in the file name', () => {
-    expect(generateNextmd('_[doc1]hel[trap]lo.abc')).toEqual(['_hel[trap]lo']);
-  });
-
-  test('exclude brackets and any following whitespaces in the file name', () => {
-    expect(generateNextmd('[doc1]   hello.abc')).toEqual(['hello']);
-  });
-
-  test('check the brackets rule for a nested file', () => {
-    expect(generateNextmd('path/[doc1]hello.abc')).toEqual(['path', 'hello']);
-  });
-
-  test('ensure the brackets rule only applied to the file name', () => {
-    expect(generateNextmd('path/[brackets-rule-only-applied-to-filename]to/hello.abc')).toEqual([
-      'path',
-      '[brackets-rule-only-applied-to-filename]to',
-      'hello',
-    ]);
-  });
-});
+import { pathToContent, exclude, isMDX, flatFiles, treeSync, isDraft } from '../utils/fs';
 
 describe('tree object to exclude from generating a path', () => {
   const aFileWithExt = (extension: string): TreeObject => ({
@@ -174,4 +123,18 @@ describe('flat files', () => {
 test('Tree parsing', () => {
   const dirFileSystem = resolve(__dirname, '__filesystem__/');
   expect(treeSync(dirFileSystem)).toMatchSnapshot();
+});
+
+describe('is draft', () => {
+  test('without "_"', () => {
+    expect(isDraft('path/to/file.abc')).toBeFalsy();
+  });
+
+  test('with file name starting with "_"', () => {
+    expect(isDraft('path/to/_file.abc')).toBeTruthy();
+  });
+
+  test('with path starting with "_"', () => {
+    expect(isDraft('path/_to/file.abc')).toBeTruthy();
+  });
 });

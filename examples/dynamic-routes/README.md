@@ -12,6 +12,11 @@ For example:
 
 ```
 git clone https://github.com/frouo/next-markdown.git
+
+cd next-markdown
+npm install
+npm run build
+
 cd examples/dynamic-routes/
 npm install
 npm run dev

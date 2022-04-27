@@ -1,6 +1,6 @@
-import { resolve, parse, relative } from 'path';
+import { resolve, relative } from 'path';
 import { Config, File, NextMarkdownFile, NextMarkdownProps } from './types';
-import { pathToContent, flatFiles, generateNextmd, readFileSyncUTF8 } from './utils/fs';
+import { pathToContent, flatFiles, generateNextmd, readFileSyncUTF8, isDraft } from './utils/fs';
 import { treeContentRepo } from './utils/git';
 import { consoleLogNextmd } from './utils/logger';
 import { extractFrontMatter, readMarkdownFile } from './utils/markdown';
@@ -15,42 +15,84 @@ const NextMarkdown = (config: Config) => {
   const relativeToAbsolute = (filePath: string) => resolve(finalPathToContent, filePath);
   const absoluteToRelative = (filePath: string) => relative(finalPathToContent, filePath);
 
-  const includeToApply = async (file: File) =>
-    config.include
-      ? (async (fn: typeof config.include) => {
-          const rawdata = readFileSyncUTF8(relativeToAbsolute(file.path));
-          const { frontMatter } = extractFrontMatter(rawdata);
-          return fn(file, frontMatter);
-        })(config.include)
-      : file.name !== 'README.md' && file.name.startsWith('_') === false;
-
   const getAllFiles = async () => {
+    const filterFileFinal = async (file: File) =>
+      config.filterFile
+        ? (async (fn: typeof config.filterFile) => {
+            const rawdata = readFileSyncUTF8(relativeToAbsolute(file.path));
+            const { frontMatter } = extractFrontMatter(rawdata);
+            return fn(file, frontMatter);
+          })(config.filterFile)
+        : file.name !== 'README.md';
+
     const tree = await treeContentRepo(relativeToAbsolute('.'), config.debug ?? false, config.contentGitRepo);
-    return flatFiles(tree);
+    const allFiles = await Promise.all(
+      flatFiles(tree).map(async (e) => ({ file: e, isIncluded: await filterFileFinal(e) })),
+    );
+
+    if (config.debug) {
+      consoleLogNextmd('Files:', JSON.stringify(allFiles));
+    }
+
+    return allFiles.filter((e) => e.isIncluded).map((e) => e.file);
+  };
+
+  const getStaticPropsForNextmd = async (nextmd: string[]): Promise<{ props: NextMarkdownProps }> => {
+    const allFiles = await getAllFiles();
+
+    const file = allFiles.find(
+      (e) => JSON.stringify(nextmd) === JSON.stringify(generateNextmd(absoluteToRelative(e.path))),
+    );
+
+    if (file === undefined) {
+      throw Error(`Could not find markdown file at path "${nextmd.join('/')}"`);
+    }
+
+    const pageData = await readMarkdownFile(relativeToAbsolute(file.path), config);
+
+    const subPaths = allFiles
+      .filter((e) => e !== file) // remove itself
+      .map((e) => absoluteToRelative(e.path))
+      .filter((e) => isDraft(e) === false) // exclude draft or unpublished
+      .map((e): NextMarkdownFile | null => {
+        // compare file's nextmd with the given nextmd
+        const fileNextmd = generateNextmd(e);
+        const parentNextmd = fileNextmd.slice(0, -1); // remove last element
+        if (JSON.stringify(nextmd) === JSON.stringify(parentNextmd)) {
+          const { frontMatter, content } = extractFrontMatter(readFileSyncUTF8(relativeToAbsolute(e)));
+          return {
+            nextmd: fileNextmd,
+            frontMatter,
+            markdown: content,
+          };
+        } else {
+          return null;
+        }
+      })
+      .flatMap((e) => (e ? [e] : []));
+
+    return {
+      props: {
+        ...pageData,
+        nextmd,
+        subPaths,
+      },
+    };
   };
 
   return {
     getStaticPaths: async () => {
       const allFiles = await getAllFiles();
-      const allFilesWithInclude = await Promise.all(
-        allFiles.map(async (e) => ({
-          ...e,
-          isIncluded: await includeToApply(e),
-        })),
-      );
-
-      if (config.debug) {
-        consoleLogNextmd('getStaticPaths:', JSON.stringify(allFilesWithInclude));
-      }
-
-      const files = allFilesWithInclude.filter((e) => e.isIncluded);
 
       return {
-        paths: files.map((e) => ({
-          params: {
-            nextmd: generateNextmd(absoluteToRelative(e.path)),
-          },
-        })),
+        paths: allFiles
+          .map((e) => absoluteToRelative(e.path))
+          .filter((e) => isDraft(e) === false)
+          .map((e) => ({
+            params: {
+              nextmd: generateNextmd(e),
+            },
+          })),
         fallback: false, // See the "fallback" section below
       };
     },
@@ -62,43 +104,10 @@ const NextMarkdown = (config: Config) => {
         throw Error('Could not find params "nextmd". Do you name the file `[...nextmd].tsx` or `[...nextmd].jsx`?');
       }
 
-      const allFiles = await getAllFiles();
-
-      const file = allFiles.find(
-        (e) => JSON.stringify(nextmd) === JSON.stringify(generateNextmd(absoluteToRelative(e.path))),
-      );
-
-      if (file === undefined) {
-        throw Error(`Could not find markdown file at path "${nextmd.join('/')}"`);
-      }
-
-      const pageData = await readMarkdownFile(relativeToAbsolute(file.path), config);
-
-      const filesInSameDir = allFiles
-        .filter((e) => e !== file) // remove itself
-        .filter((e) => JSON.stringify(nextmd) === JSON.stringify(absoluteToRelative(parse(e.path).dir).split('/'))); // get files in the same directory
-
-      const filesData: NextMarkdownFile[] = (
-        await Promise.all(filesInSameDir.map(async (e) => ({ ...e, isIncluded: await includeToApply(e) })))
-      )
-        .filter((e) => e.isIncluded)
-        .map((e) => {
-          const { frontMatter, content } = extractFrontMatter(readFileSyncUTF8(relativeToAbsolute(e.path)));
-          return {
-            nextmd: generateNextmd(absoluteToRelative(e.path)),
-            frontMatter,
-            markdown: content,
-          };
-        });
-
-      return {
-        props: {
-          ...pageData,
-          nextmd,
-          files: filesData,
-        },
-      };
+      return getStaticPropsForNextmd(nextmd);
     },
+
+    getStaticPropsForNextmd,
   };
 };
 

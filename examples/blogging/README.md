@@ -1,28 +1,26 @@
 # Blogging
 
-`next-markdown` is blog-aware. Or docs-aware.
+`next-markdown` is blog-aware.
 
-## All Files Listed
+It automatically lists all available paths adjacent to /blog in the `props` of the rendered _index.md_.
 
-`next-markdown` will automatically list all the files in a directory in the props `files` when `index.md` is rendered.
-
-### Example
+Example:
 
 ```
 ├ blog/
-  ├ index.md   .................. ➡️ /blog
-  ├ hello.md   .................. ➡️ /blog/hello
-  ├ world.md   .................. ➡️ /blog/world
+  ├ index.md   .................. ➡️ http://localhost:3000/blog
+  ├ hello.md   .................. ➡️ http://localhost:3000/blog/hello
+  ├ world.md   .................. ➡️ http://localhost:3000/blog/world
 ```
 
-When rendering `index.md`, next-markdown will create and pass the following props (`/blog` route):
+When rendering `index.md` (= `/blog` route), next-markdown creates the following props:
 
-```json
+```js
 props: {
   nextmd: ["blog"],
   html: ...,
   frontMatter: { ... },
-  files: [
+  subPaths: [
     {
       nextmd: ["blog", "hello"],
       frontMatter: { ... },
@@ -36,25 +34,35 @@ props: {
 }
 ```
 
-## Ignored Files
+## Create Drafts, Publish or Unpublish
 
-By default `next-markdown` ignores:
+By default `next-markdown` will create a path for every files found, **unless** the file name starts with an underscore `_`, eg: `_draft.md`.
 
-- files whose name starts with an underscore `_`, eg: `_draft.md`
-- `README.md` files
+This simple next-markdown rule gives you the flexibility to simply create drafts, or (un)publish a route.
+
+Example:
 
 ```
+├ _about.md   ................... ➡️ ❌ 404, because file name starts with "_"
 ├ blog/
   ├ index.md   .................. ➡️ /blog
-  ├ _draft.md  .................. ➡️ ❌ because file name starts with "_"
+  ├ hello.md   .................. ➡️ /blog/hello
+  ├ _draft.md   ................. ➡️ ❌ 404, because file name starts with "_"
+├ _sandbox/
+  ├ hello.md   .................. ➡️ ❌ 404, because the folder "_sandbox" starts with an "_"
+  ├ world.md   .................. ➡️ ❌ 404, because the folder "_sandbox" starts with an "_"
 ```
 
-This behavior can be overriden by defining your own `include` in the initializer. For example:
+## Exclude md/mdx files
+
+By default next-markdown will parse every `md` and `mdx` files found excluding `README.md`.
+
+Example:
 
 ```javascript
 {
-  include: (file, frontMatter) => file.name !== 'README.md' && frontMatter.publish === true;
-  // 👆 warning, with this example, ALL your md files must now have a boolean `publish` in its front matter.
+  filterFile: (file: File, frontMatter: MyFrontMatter) => frontMatter.publish === true;
+  // 👆 warning, in this example, only files which front matter includes the `publish: true` statement will be rendered.
 }
 ```
 
@@ -64,7 +72,7 @@ You might want to classify your files in your directory.
 
 For that reason, `next-markdown` automatically ignores the first occurence of "`[text] `" in the markdown file name when creating its path.
 
-### Example
+Example:
 
 ```
 ├ docs/
@@ -72,16 +80,20 @@ For that reason, `next-markdown` automatically ignores the first occurence of "`
   ├ [doc-1] get-started.md   .... ➡️ /docs/get-started
   ├ [doc-2] features.md   ....... ➡️ /docs/features
   ├ [doc-3] contribute.md   ..... ➡️ /docs/contribute
+  ├ [doc-4] _draft.md   ......... ➡️ ❌ 404, because file name starts with "_" (after `[...] `)
+├ [legal] terms.md   ............ ➡️ /terms
+├ [legal] privacy.md   .......... ➡️ /privacy
+├ about.md   .................... ➡️ /about
 ```
 
-When rendering `index.md`, next-markdown will create and pass the following props (`/docs` route):
+When rendering `index.md` (= `/docs` route), next-markdown creates the following props:
 
-```json
+```js
 props: {
   nextmd: ["docs"],
   html: ...,
   frontMatter: { ... },
-  files: [
+  subPaths: [
     {
       nextmd: ["docs", "get-started"],
       frontMatter: { ... },
@@ -103,6 +115,7 @@ props: {
 
 ```shell
 git clone https://github.com/frouo/next-markdown.git
+
 cd next-markdown
 npm install
 npm run build

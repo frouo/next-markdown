@@ -3,6 +3,11 @@
 exports[`Tree parsing 1`] = `
 Array [
   Object {
+    "name": "README.md",
+    "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/README.md",
+    "type": "file",
+  },
+  Object {
     "name": "about.md",
     "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/about.md",
     "type": "file",
@@ -42,6 +47,94 @@ Array [
   Object {
     "children": Array [
       Object {
+        "children": Array [
+          Object {
+            "name": "[a] install.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[0] getting-started/[a] install.md",
+            "type": "file",
+          },
+          Object {
+            "name": "[b] setup.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[0] getting-started/[b] setup.md",
+            "type": "file",
+          },
+          Object {
+            "name": "_draft.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[0] getting-started/_draft.md",
+            "type": "file",
+          },
+          Object {
+            "name": "index.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[0] getting-started/index.md",
+            "type": "file",
+          },
+        ],
+        "name": "[0] getting-started",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[0] getting-started",
+        "type": "dir",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "name": "[a] get-static-paths.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[1] api/[a] get-static-paths.md",
+            "type": "file",
+          },
+          Object {
+            "name": "[b] get-static-props.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[1] api/[b] get-static-props.md",
+            "type": "file",
+          },
+          Object {
+            "name": "_index.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[1] api/_index.md",
+            "type": "file",
+          },
+        ],
+        "name": "[1] api",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[1] api",
+        "type": "dir",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "name": "[a] dynamic-routes.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[2] examples/[a] dynamic-routes.md",
+            "type": "file",
+          },
+          Object {
+            "name": "[b] blog.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[2] examples/[b] blog.md",
+            "type": "file",
+          },
+          Object {
+            "name": "[c] mdx-support.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[2] examples/[c] mdx-support.md",
+            "type": "file",
+          },
+        ],
+        "name": "[2] examples",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs/[2] examples",
+        "type": "dir",
+      },
+    ],
+    "name": "docs",
+    "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/docs",
+    "type": "dir",
+  },
+  Object {
+    "children": Array [
+      Object {
+        "name": "README.md",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/README.md",
+        "type": "file",
+      },
+      Object {
+        "name": "_draft.md",
+        "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/_draft.md",
+        "type": "file",
+      },
+      Object {
         "name": "c.md",
         "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/c.md",
         "type": "file",
@@ -49,8 +142,23 @@ Array [
       Object {
         "children": Array [
           Object {
+            "name": "_draft.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/to/_draft.md",
+            "type": "file",
+          },
+          Object {
+            "name": "_index.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/to/_index.md",
+            "type": "file",
+          },
+          Object {
             "name": "e.mdx",
             "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/to/e.mdx",
+            "type": "file",
+          },
+          Object {
+            "name": "f.md",
+            "path": "/Users/frouo/Programming/Web/next-markdown/src/__tests__/__filesystem__/path/to/f.md",
             "type": "file",
           },
         ],

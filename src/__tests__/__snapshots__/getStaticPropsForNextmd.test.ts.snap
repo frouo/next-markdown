@@ -1,0 +1,148 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/about 1`] = `
+Object {
+  "props": Object {
+    "frontMatter": Object {},
+    "html": "",
+    "markdown": "",
+    "mdxSource": null,
+    "nextmd": Array [
+      "about",
+    ],
+    "subPaths": Array [],
+    "tableOfContents": Array [],
+  },
+}
+`;
+
+exports[`/blog 1`] = `
+Object {
+  "props": Object {
+    "frontMatter": Object {},
+    "html": "",
+    "markdown": "",
+    "mdxSource": null,
+    "nextmd": Array [
+      "blog",
+    ],
+    "subPaths": Array [
+      Object {
+        "frontMatter": Object {},
+        "markdown": "",
+        "nextmd": Array [
+          "blog",
+          "post-1",
+        ],
+      },
+      Object {
+        "frontMatter": Object {},
+        "markdown": "",
+        "nextmd": Array [
+          "blog",
+          "post-2",
+        ],
+      },
+      Object {
+        "frontMatter": Object {},
+        "markdown": "",
+        "nextmd": Array [
+          "blog",
+          "post-3",
+        ],
+      },
+    ],
+    "tableOfContents": Array [],
+  },
+}
+`;
+
+exports[`/docs/api 1`] = `
+Object {
+  "props": Object {
+    "frontMatter": Object {},
+    "html": "",
+    "markdown": "",
+    "mdxSource": null,
+    "nextmd": Array [
+      "docs",
+      "api",
+    ],
+    "subPaths": Array [
+      Object {
+        "frontMatter": Object {},
+        "markdown": "",
+        "nextmd": Array [
+          "docs",
+          "api",
+          "get-static-paths",
+        ],
+      },
+      Object {
+        "frontMatter": Object {},
+        "markdown": "",
+        "nextmd": Array [
+          "docs",
+          "api",
+          "get-static-props",
+        ],
+      },
+    ],
+    "tableOfContents": Array [],
+  },
+}
+`;
+
+exports[`/docs/getting-started 1`] = `
+Object {
+  "props": Object {
+    "frontMatter": Object {},
+    "html": "",
+    "markdown": "",
+    "mdxSource": null,
+    "nextmd": Array [
+      "docs",
+      "getting-started",
+    ],
+    "subPaths": Array [
+      Object {
+        "frontMatter": Object {},
+        "markdown": "",
+        "nextmd": Array [
+          "docs",
+          "getting-started",
+          "install",
+        ],
+      },
+      Object {
+        "frontMatter": Object {},
+        "markdown": "",
+        "nextmd": Array [
+          "docs",
+          "getting-started",
+          "setup",
+        ],
+      },
+    ],
+    "tableOfContents": Array [],
+  },
+}
+`;
+
+exports[`/path/to/e 1`] = `
+Object {
+  "props": Object {
+    "frontMatter": Object {},
+    "html": null,
+    "markdown": "",
+    "mdxSource": "mocked",
+    "nextmd": Array [
+      "path",
+      "to",
+      "e",
+    ],
+    "subPaths": Array [],
+    "tableOfContents": Array [],
+  },
+}
+`;

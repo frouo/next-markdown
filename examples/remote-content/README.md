@@ -29,6 +29,11 @@ const nextmd = NextMarkdown({
 
 ```
 git clone https://github.com/frouo/next-markdown.git
+
+cd next-markdown
+npm install
+npm run build
+
 cd examples/remote-content/
 npm install
 npm run dev

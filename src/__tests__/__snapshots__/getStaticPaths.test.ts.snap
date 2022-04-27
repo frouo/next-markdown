@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generate nextmd from a file tree 1`] = `
+Object {
+  "fallback": false,
+  "paths": Array [
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "about",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "b",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "blog",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "blog",
+          "post-1",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "blog",
+          "post-2",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "blog",
+          "post-3",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "getting-started",
+          "install",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "getting-started",
+          "setup",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "getting-started",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "api",
+          "get-static-paths",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "api",
+          "get-static-props",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "examples",
+          "dynamic-routes",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "examples",
+          "blog",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "docs",
+          "examples",
+          "mdx-support",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "path",
+          "c",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "path",
+          "to",
+          "e",
+        ],
+      },
+    },
+    Object {
+      "params": Object {
+        "nextmd": Array [
+          "path",
+          "to",
+          "f",
+        ],
+      },
+    },
+  ],
+}
+`;

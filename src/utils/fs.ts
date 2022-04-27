@@ -59,20 +59,25 @@ export const flatFiles = (tree: TreeObject[]): File[] => {
 };
 
 export const generateNextmd = (relativeFilePath: string) => {
-  const parsed = parse(relativeFilePath);
-  if (parsed.name === 'index') {
-    return parsed.dir.split(sep).filter((e) => e);
-  } else {
-    return relativeFilePath.split(sep).map((e, index, arr) => {
+  return relativeFilePath
+    .split(sep)
+    .map((e) => e.replace(/^_(\s+)?/, '')) // replace the first occurence of "_" at the beginning of the string with ""
+    .map((e) => e.replace(/^\[(.*?)\](\s+)?_?/, '')) // replace the first occurence of "[whatever-you-want]+whitespaces(if-any)" at the beginning of string with ""
+    .map((e, index, arr) => {
       if (index === arr.length - 1) {
-        return e
-          .replace(/\[(.*?)\](\s+)?/, '') // replace `[whatever-you-want]+whitespaces(if-any)` with ``
-          .replace(parsed.ext, '');
+        const lastElement = e;
+        const parsed = parse(lastElement);
+        if (parsed.name === 'index') {
+          return undefined;
+        } else {
+          return parsed.name;
+        }
       } else {
         return e;
       }
-    });
-  }
+    })
+    .map((e) => e?.trim())
+    .flatMap((e) => (e ? [e] : []));
 };
 
 export const getPostFilesFromNextmd = async (files: File[], nextmd: string[]) =>
@@ -81,3 +86,6 @@ export const getPostFilesFromNextmd = async (files: File[], nextmd: string[]) =>
 export const isMDX = (filePath: string) => filePath.endsWith('.mdx');
 
 export const readFileSyncUTF8 = (filePath: string) => fs.readFileSync(filePath).toString('utf-8');
+
+export const isDraft = (relativeFilePath: string) =>
+  relativeFilePath.split(sep).find((e) => e.startsWith('_')) !== undefined;

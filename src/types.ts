@@ -43,9 +43,9 @@ export type Config = MarkdownPlugins & {
   };
 
   /**
-   * A function that tells `next-markdown` to generate a route for the given file. By default `next-markdown` ignores "README.md" files or files name starting with an underscore (eg. `_draft.md`).
+   * File that passes this test will be parsed by next-markdown. If `null` or `undefined`, next-markdown will ignore "README.md" by default.
    */
-  include?: <T extends YAMLFrontMatter = {}>(file: File, frontMatter: T) => boolean;
+  filterFile?: <T extends YAMLFrontMatter = {}>(file: File, frontMatter: T) => boolean;
 
   /**
    * Get more logs. Make sure it is `false` for production.
@@ -83,7 +83,7 @@ export type NextMarkdownProps<T extends YAMLFrontMatter = {}, U extends YAMLFron
   html: string | null;
   mdxSource: MDXRemoteSerializeResult<Record<string, unknown>> | null;
   tableOfContents: TableOfContents;
-  files: NextMarkdownFile<U>[] | null;
+  subPaths: NextMarkdownFile<U>[] | null;
 };
 
 export type NextMarkdownFile<U extends YAMLFrontMatter = {}> = {
