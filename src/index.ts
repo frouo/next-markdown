@@ -37,7 +37,7 @@ const NextMarkdown = <T extends YAMLFrontMatter, U extends YAMLFrontMatter = T>(
     return allFiles.filter((e) => e.isIncluded).map((e) => e.file);
   };
 
-  const getStaticPropsForNextmd = async <R extends YAMLFrontMatter = {}, S extends YAMLFrontMatter = R>(
+  const getStaticPropsForNextmd = async <R extends YAMLFrontMatter, S extends YAMLFrontMatter = R>(
     nextmd: string[],
   ): Promise<{ props: NextMarkdownProps<R, S> }> => {
     const allFiles = await getAllFiles();

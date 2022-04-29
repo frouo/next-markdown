@@ -45,7 +45,7 @@ export type Config = MarkdownPlugins & {
   /**
    * File that passes this test will be parsed by next-markdown. If `null` or `undefined`, next-markdown will ignore "README.md" by default.
    */
-  filterFile?: <T extends YAMLFrontMatter = {}>(file: File, frontMatter: T) => boolean;
+  filterFile?: <T extends YAMLFrontMatter>(file: File, frontMatter: T) => boolean;
 
   /**
    * Get more logs. Make sure it is `false` for production.
@@ -79,14 +79,14 @@ export interface TableOfContentItem {
 
 export type TableOfContents = TableOfContentItem[];
 
-export type NextMarkdownProps<T extends YAMLFrontMatter = {}, U extends YAMLFrontMatter = T> = NextMarkdownFile<T> & {
+export type NextMarkdownProps<T extends YAMLFrontMatter, U extends YAMLFrontMatter = T> = NextMarkdownFile<T> & {
   html: string | null;
   mdxSource: MDXRemoteSerializeResult<Record<string, unknown>> | null;
   tableOfContents: TableOfContents;
   subPaths: NextMarkdownFile<U>[] | null;
 };
 
-export type NextMarkdownFile<U extends YAMLFrontMatter = {}> = {
+export type NextMarkdownFile<U extends YAMLFrontMatter> = {
   nextmd: string[];
   frontMatter: U;
   markdown: string;

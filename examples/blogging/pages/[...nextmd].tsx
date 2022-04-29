@@ -8,7 +8,6 @@ type MyBlogPostFrontMatter = MyFrontMatter & { date: string; author: string };
 
 const nextmd = NextMarkdown<MyFrontMatter, MyBlogPostFrontMatter>({
   pathToContent: './pages-markdown',
-  debug: true,
 });
 
 export const getStaticProps = nextmd.getStaticProps;

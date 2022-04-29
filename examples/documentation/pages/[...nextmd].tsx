@@ -4,7 +4,7 @@ import MarkdownPage from '../components/MarkdownPage';
 import remarkPrism from 'remark-prism';
 import 'prismjs/themes/prism-tomorrow.css';
 import { GetStaticPropsContext } from 'next';
-import { DocumentationPageProps, FMatter, MyNextMarkdownProps } from '../lib/types';
+import { DocumentationPageProps, MyNextMarkdownProps } from '../lib/types';
 
 const nextmd = NextMarkdown({
   pathToContent: './pages-markdown',
