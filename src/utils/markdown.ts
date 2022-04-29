@@ -12,18 +12,18 @@ import { extractDataFromAlt } from './alt';
 import { isMDX, readFileSyncUTF8 } from './fs';
 import { getTableOfContents } from './table-of-contents';
 
-export const readMarkdownFile = async (filePath: string, plugins: MarkdownPlugins) => {
+export const readMarkdownFile = async <T extends YAMLFrontMatter>(filePath: string, plugins: MarkdownPlugins) => {
   const rawdata = readFileSyncUTF8(filePath);
   const mdx = isMDX(filePath);
 
-  return await transformFileRawData(rawdata, mdx ? 'mdx' : 'md', plugins, {
+  return await transformFileRawData<T>(rawdata, mdx ? 'mdx' : 'md', plugins, {
     markdownToHtml,
     mdxSerialize: (await import('next-mdx-remote/serialize')).serialize,
     tableOfContents: getTableOfContents,
   });
 };
 
-export const transformFileRawData = async (
+export const transformFileRawData = async <T extends YAMLFrontMatter>(
   rawdata: string,
   type: 'md' | 'mdx',
   plugins: MarkdownPlugins,
@@ -36,7 +36,7 @@ export const transformFileRawData = async (
     tableOfContents: (content: string) => TableOfContents;
   },
 ) => {
-  const { frontMatter, content } = extractFrontMatter(rawdata);
+  const { frontMatter, content } = extractFrontMatter<T>(rawdata);
 
   return {
     frontMatter,

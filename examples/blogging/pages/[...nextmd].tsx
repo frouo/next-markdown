@@ -1,11 +1,12 @@
-import NextMarkdown, { NextMarkdownProps, TableOfContentItem } from 'next-markdown';
+import { InferGetStaticPropsType } from 'next';
+import NextMarkdown, { TableOfContentItem } from 'next-markdown';
 import Head from 'next/head';
 import Link from 'next/link';
 
 type MyFrontMatter = { title: string };
 type MyBlogPostFrontMatter = MyFrontMatter & { date: string; author: string };
 
-const nextmd = NextMarkdown({
+const nextmd = NextMarkdown<MyFrontMatter, MyBlogPostFrontMatter>({
   pathToContent: './pages-markdown',
   debug: true,
 });
@@ -24,7 +25,7 @@ const TableOfContentItem = (item: TableOfContentItem) => {
   );
 };
 
-export default function MyMarkdownPage(props: NextMarkdownProps<MyFrontMatter, MyBlogPostFrontMatter>) {
+export default function MyMarkdownPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const { html, frontMatter, subPaths, tableOfContents } = props;
 
   return (

@@ -1,5 +1,5 @@
 import { resolve, relative } from 'path';
-import { Config, File, NextMarkdownFile, NextMarkdownProps } from './types';
+import { Config, File, NextMarkdownFile, NextMarkdownProps, YAMLFrontMatter } from './types';
 import { pathToContent, flatFiles, generateNextmd, readFileSyncUTF8, isDraft } from './utils/fs';
 import { treeContentRepo } from './utils/git';
 import { consoleLogNextmd } from './utils/logger';
@@ -9,7 +9,7 @@ import { extractFrontMatter, readMarkdownFile } from './utils/markdown';
  * @param config The config for the next-markdown module.
  * @returns The next markdown module ready-to-use.
  */
-const NextMarkdown = (config: Config) => {
+const NextMarkdown = <T extends YAMLFrontMatter, U extends YAMLFrontMatter = T>(config: Config) => {
   const isContentFetchedFromRemote = config.contentGitRepo !== undefined;
   const finalPathToContent = pathToContent(config.pathToContent, isContentFetchedFromRemote);
   const relativeToAbsolute = (filePath: string) => resolve(finalPathToContent, filePath);
@@ -37,7 +37,9 @@ const NextMarkdown = (config: Config) => {
     return allFiles.filter((e) => e.isIncluded).map((e) => e.file);
   };
 
-  const getStaticPropsForNextmd = async (nextmd: string[]): Promise<{ props: NextMarkdownProps }> => {
+  const getStaticPropsForNextmd = async <R extends YAMLFrontMatter = {}, S extends YAMLFrontMatter = R>(
+    nextmd: string[],
+  ): Promise<{ props: NextMarkdownProps<R, S> }> => {
     const allFiles = await getAllFiles();
 
     const file = allFiles.find(
@@ -48,18 +50,18 @@ const NextMarkdown = (config: Config) => {
       throw Error(`Could not find markdown file at path "${nextmd.join('/')}"`);
     }
 
-    const pageData = await readMarkdownFile(relativeToAbsolute(file.path), config);
+    const pageData = await readMarkdownFile<R>(relativeToAbsolute(file.path), config);
 
     const subPaths = allFiles
       .filter((e) => e !== file) // remove itself
       .map((e) => absoluteToRelative(e.path))
       .filter((e) => isDraft(e) === false) // exclude draft or unpublished
-      .map((e): NextMarkdownFile | null => {
+      .map((e): NextMarkdownFile<S> | null => {
         // compare file's nextmd with the given nextmd
         const fileNextmd = generateNextmd(e);
         const parentNextmd = fileNextmd.slice(0, -1); // remove last element
         if (JSON.stringify(nextmd) === JSON.stringify(parentNextmd)) {
-          const { frontMatter, content } = extractFrontMatter(readFileSyncUTF8(relativeToAbsolute(e)));
+          const { frontMatter, content } = extractFrontMatter<S>(readFileSyncUTF8(relativeToAbsolute(e)));
           return {
             nextmd: fileNextmd,
             frontMatter,
@@ -97,14 +99,14 @@ const NextMarkdown = (config: Config) => {
       };
     },
 
-    getStaticProps: async (context: { params?: { nextmd: string[] } }): Promise<{ props: NextMarkdownProps }> => {
+    getStaticProps: async (context: { params?: { nextmd: string[] } }): Promise<{ props: NextMarkdownProps<T, U> }> => {
       const nextmd = context.params?.nextmd;
 
       if (nextmd === undefined) {
         throw Error('Could not find params "nextmd". Do you name the file `[...nextmd].tsx` or `[...nextmd].jsx`?');
       }
 
-      return getStaticPropsForNextmd(nextmd);
+      return getStaticPropsForNextmd<T, U>(nextmd);
     },
 
     getStaticPropsForNextmd,
