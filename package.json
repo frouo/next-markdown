@@ -18,7 +18,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "tslint -p tsconfig.json",
-    "install:examples": "npm --prefix examples/blogging i && npm --prefix examples/dynamic-routes i && npm --prefix examples/remote-content i && npm --prefix examples/mdx i && npm --prefix examples/custom-remark-rehype-plugins i && npm --prefix examples/documentation i",
+    "install:examples": "npm --prefix examples/blogging i && npm --prefix examples/dynamic-routes i && npm --prefix examples/remote-content i && npm --prefix examples/mdx i && npm --prefix examples/custom-remark-rehype-plugins i && npm --prefix examples/documentation i && npm --prefix examples/blog i",
     "prepare": "npm run build",
     "prepublishOnly": "npm run format:check && npm test && npm run lint",
     "preversion": "npm run format:check && npm test && npm run lint",
