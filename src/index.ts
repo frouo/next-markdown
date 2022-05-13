@@ -102,11 +102,7 @@ const NextMarkdown = <T extends YAMLFrontMatter, U extends YAMLFrontMatter = T>(
     getStaticProps: async (context: { params?: { nextmd: string[] } }): Promise<{ props: NextMarkdownProps<T, U> }> => {
       const nextmd = context.params?.nextmd;
 
-      if (nextmd === undefined) {
-        throw Error('Could not find params "nextmd". Do you name the file `[...nextmd].tsx` or `[...nextmd].jsx`?');
-      }
-
-      return getStaticPropsForNextmd<T, U>(nextmd);
+      return getStaticPropsForNextmd<T, U>(nextmd ?? []);
     },
 
     getStaticPropsForNextmd,
