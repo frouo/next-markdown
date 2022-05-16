@@ -21,7 +21,7 @@ export const exclude = (object: TreeObject) => {
   return false;
 };
 
-export const treeSync = (path: string) => {
+export const treeSync = (path: string, absoluteToRelative: (path: string) => string) => {
   const res = fs
     .readdirSync(path)
     .map((e) => ({ name: e, dir: path }))
@@ -35,11 +35,16 @@ export const treeSync = (path: string) => {
             return null; // no need to inspect recursively this
           } else {
             return isDir
-              ? { type: 'dir', name: e.name, path: _path, children: treeSync(_path) }
+              ? {
+                  type: 'dir',
+                  name: e.name,
+                  path: absoluteToRelative(_path),
+                  children: treeSync(_path, absoluteToRelative),
+                }
               : {
                   type: 'file',
                   name: e.name,
-                  path: _path,
+                  path: absoluteToRelative(_path),
                 };
           }
         }

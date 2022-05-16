@@ -11,7 +11,15 @@ type GitRepo = {
   branch: string;
 };
 
-export const treeContentRepo = async (pathToContent: string, debug: boolean, gitRepo?: GitRepo) => {
+/**
+ * @param pathToContent Absolute path to content
+ */
+export const treeContentRepo = async (
+  pathToContent: string,
+  absoluteToRelative: (path: string) => string,
+  debug: boolean,
+  gitRepo?: GitRepo,
+) => {
   if (gitRepo) {
     const { remoteUrl, branch } = gitRepo;
     if (!remoteUrl || !branch) {
@@ -78,5 +86,5 @@ export const treeContentRepo = async (pathToContent: string, debug: boolean, git
     consoleLogNextmd('creating page from', pathToContent);
   }
 
-  return treeSync(pathToContent);
+  return treeSync(pathToContent, absoluteToRelative);
 };

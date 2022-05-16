@@ -1,4 +1,4 @@
-import { join, parse, resolve } from 'path';
+import { join, parse, relative } from 'path';
 import { Dir, File, TreeObject } from '../types';
 import { pathToContent, exclude, isMDX, flatFiles, treeSync, isDraft } from '../utils/fs';
 
@@ -121,8 +121,10 @@ describe('flat files', () => {
 });
 
 test('Tree parsing', () => {
-  const dirFileSystem = resolve(__dirname, '__filesystem__/');
-  expect(treeSync(dirFileSystem)).toMatchSnapshot();
+  const dirFileSystem = join(__dirname, '__filesystem__/');
+  const absoluteToRelative = (filePath: string) => relative(dirFileSystem, filePath);
+
+  expect(treeSync(dirFileSystem, absoluteToRelative)).toMatchSnapshot();
 });
 
 describe('is draft', () => {
