@@ -1,8 +1,8 @@
-# Blogging
+# Blog
 
 `next-markdown` is blog-aware.
 
-It automatically lists all available paths adjacent to /blog in the `props` of the rendered _index.md_.
+`next-markdown` automatically lists all files in /a-folder in `props` when _/a-folder/index.md_ is rendered.
 
 Example:
 
@@ -13,7 +13,7 @@ Example:
   ├ world.md   .................. ➡️ http://localhost:3000/blog/world
 ```
 
-When rendering `index.md` (= `/blog` route), next-markdown creates the following props:
+When rendering `index.md` (`/blog` route), `next-markdown` creates the following props:
 
 ```js
 props: {
@@ -26,7 +26,7 @@ props: {
       frontMatter: { ... },
       html: ...
     }, {
-      nextmd: ["blog", "world",
+      nextmd: ["blog", "world"],
       frontMatter: { ... },
       html: ...
     }
@@ -120,7 +120,7 @@ cd next-markdown
 npm install
 npm run build
 
-cd examples/blogging/
+cd examples/blog/
 npm install
 npm run dev
 ```

@@ -4,7 +4,7 @@ import Link from 'next/link';
 const Home: NextPage = () => {
   return (
     <div>
-      <h1>Blogging</h1>
+      <h1>Documentation Demo</h1>
       <p>Hello, I am next-markdown,</p>
       <p>
         Visit my{' '}

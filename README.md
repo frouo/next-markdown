@@ -35,7 +35,7 @@ Used by
 - **lembot.com** - all pages except the home page are generated from markdown hosted in a separate public [github repo](https://github.com/frouo/lembot-public-website).
 - **[snappify.io](https://snappify.io)** (blog, docs) - a powerful design tool to create and manage beautiful images of your code.
 - **[frouo.com](https://frouo.com)** - a dev blog
-- create a PR to add your website, or use [twitter DM](https://twitter.com/nextmarkdown)
+- reach us on twitter [@nextmarkdown](https://twitter.com/nextmarkdown) to add your website here (or personal: [@frouo](https://twitter.com/frouo))
 
 ## Get Started ✨
 
@@ -113,7 +113,7 @@ pages-markdown/
 
 See the [example](./examples/dynamic-routes/).
 
-### Blog Aware ([example](./examples/blogging/))
+### Blog Aware ([example](./examples/blog/))
 
 `next-markdown` is blog-aware:
 
@@ -131,7 +131,7 @@ See the [example](./examples/dynamic-routes/).
 - organize your docs by folders
 - etc.
 
-### Table of Contents ([example](./examples/blogging/))
+### Table of Contents ([example](./examples/blog/))
 
 For each page you'll receive the Table of Contents based on headings in your markdown.
 
@@ -169,7 +169,9 @@ For many good reasons you may want to host your content in another GIT repo.
 
 ## Examples 🖥
 
-Feel free to browse the [examples](./examples) to see `next-markdown` in action.
+More examples [here ↗️](./examples).
+
+Feel free to browse them to see `next-markdown` in action.
 
 ## Contributing 🏗️
 
@@ -194,7 +196,7 @@ npm run dev
 #### 3. Open **another terminal**, pick an example in the `examples/` folder, install dependencies and run dev
 
 ```bash
-cd examples/blogging # or dynamic-routes, or remote-content
+cd examples/blog # or dynamic-routes, or remote-content
 npm install
 npm run dev
 ```
