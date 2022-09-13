@@ -1,11 +1,8 @@
-# Blog
+# Personal Blog
 
-`next-markdown` lets you create a personal blog.
+`next-markdown` lets you create a personal blog, with only 1 tsx/jsx file: `[[nextmd]].tsx` and markdown files.
 
-It gives you the flexible to either
-
-- create your custom home page
-- or generate your home page from a markdown file
+This example demonstrate that `next-markdown` is flexible enough to list all blog post in your website home page.
 
 ## Custom home page
 
@@ -32,7 +29,7 @@ cd next-markdown
 npm install
 npm run build
 
-cd examples/blog/
+cd examples/personal-blog/
 npm install
 npm run dev
 ```

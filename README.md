@@ -135,6 +135,10 @@ See the [example](./examples/dynamic-routes/).
 
 For each page you'll receive the Table of Contents based on headings in your markdown.
 
+### Personal Blog ([example](./examples/personal-blog/))
+
+Use `next-markdown` to browse and parse your markdown files so you can build your personal blog in seconds.
+
 ### MDX Support ([example](./examples/mdx/))
 
 There is nothing to setup on your side, MDX support comes for free.
